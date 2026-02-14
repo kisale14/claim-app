@@ -5,70 +5,43 @@ import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { MegaMenuModule } from 'primeng/megamenu';
 import { RippleModule } from 'primeng/ripple';
+import { FormsModule } from '@angular/forms';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { ThemeService } from '../../services/theme-service';
 
 @Component({
   selector: 'app-sidebard',
-  imports: [AvatarModule, ButtonModule, MegaMenuModule, RippleModule, CommonModule],
+  imports: [
+    AvatarModule,
+    ButtonModule,
+    MegaMenuModule,
+    RippleModule,
+    CommonModule,
+    ToggleSwitchModule,
+    FormsModule,
+  ],
   templateUrl: './sidebard.html',
   styleUrl: './sidebard.css',
 })
 export class Sidebard {
   items: MegaMenuItem[] | undefined;
+  checked: boolean = false;
+
+  constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
+    this.checked = this.themeService.isDarkMode();
     this.items = [
       {
         label: 'Gestor de Reclamos',
         root: true,
-        items: [
-          [
-            {
-              items: [
-                { label: 'Features', icon: 'pi pi-list', subtext: 'Subtext of item' },
-                { label: 'Customers', icon: 'pi pi-users', subtext: 'Subtext of item' },
-                { label: 'Case Studies', icon: 'pi pi-file', subtext: 'Subtext of item' },
-              ],
-            },
-          ],
-          [
-            {
-              items: [
-                { label: 'Solutions', icon: 'pi pi-shield', subtext: 'Subtext of item' },
-                { label: 'Faq', icon: 'pi pi-question', subtext: 'Subtext of item' },
-                { label: 'Library', icon: 'pi pi-search', subtext: 'Subtext of item' },
-              ],
-            },
-          ],
-          [
-            {
-              items: [
-                { label: 'Community', icon: 'pi pi-comments', subtext: 'Subtext of item' },
-                { label: 'Rewards', icon: 'pi pi-star', subtext: 'Subtext of item' },
-                { label: 'Investors', icon: 'pi pi-globe', subtext: 'Subtext of item' },
-              ],
-            },
-          ],
-          [
-            {
-              items: [
-                {
-                  image: 'https://primefaces.org/cdn/primeng/images/uikit/uikit-system.png',
-                  label: 'GET STARTED',
-                  subtext: 'Build spectacular apps in no time.',
-                },
-              ],
-            },
-          ],
-        ],
       },
-      // {
-      //   label: 'Resources',
-      //   root: true,
-      // },
-      // {
-      //   label: 'Contact',
-      //   root: true,
-      // },
     ];
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+    // Actualizar el estado del switch después de cambiar el tema
+    this.checked = this.themeService.isDarkMode();
   }
 }

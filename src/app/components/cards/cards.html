@@ -1,5 +1,6 @@
   <div class="mb-2 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+    <!-- Cards con totales de reclamos -->
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
       <ng-template pTemplate="header">
         <div class="pt-6 text-center">
           <h2 class="text-xl font-semibold text-slate-600 m-0">Total Reclamos</h2>
@@ -19,7 +20,7 @@
         </div>
       </div>
     </p-card>
-    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
       <ng-template pTemplate="header">
         <div class="pt-6 text-center">
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Pendientes</h2>
@@ -38,7 +39,7 @@
         </div>
       </div>
     </p-card>
-    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
       <ng-template pTemplate="header">
         <div class="pt-6 text-center">
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Procedentes</h2>
@@ -57,7 +58,7 @@
         </div>
       </div>
     </p-card>
-    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
       <ng-template pTemplate="header">
         <div class="pt-6 text-center">
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos no procedentes</h2>
@@ -76,9 +77,11 @@
         </div>
       </div>
     </p-card>
+    <!-- Cards con totales de reclamos -->
   </div>
   <div class="mb-4 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <p-card class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+    <!-- Cards con gráficos  -->
+    <p-card class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
       <div class="relative flex items-center justify-center p-8">
         <div class="relative w-[200px] h-[200px] flex items-center justify-center">
           <p-chart type="doughnut"
@@ -87,7 +90,7 @@
                   style="width: 100%; height: 100%; display: block;" />
 
           <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span class="text-4xl font-black text-slate-800 dark:text-white leading-none">
+            <span class="text-4xl text-slate-800 font-bold tracking-tight">
               1,567
             </span>
             <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest mt-1">
@@ -97,7 +100,7 @@
         </div>
       </div>
     </p-card>
-    <p-card class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+    <p-card class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
       <div class="relative flex items-center justify-center p-8">
         <div class="relative w-[200px] h-[200px] flex items-center justify-center">
           <p-chart type="bar"
@@ -107,7 +110,9 @@
         </div>
       </div>
     </p-card>
-    <p-card (click)="showSearch()" class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+    <!-- Cards con gráficos  -->
+    <!-- Cards para buscar y crear reclamos  -->
+    <p-card (click)="showSearch()" class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
       <div class="flex flex-col items-center p-6">
         <!-- Imagen/Ilustración alusiva a búsqueda -->
         <div class="relative mb-4">
@@ -126,7 +131,7 @@
         </div>
       </div>
     </p-card>
-    <p-card (click)="showForm()" class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+    <p-card (click)="showForm()" class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
       <div class="flex flex-col items-center p-6">
         <!-- Imagen/Ilustración alusiva a búsqueda -->
         <div class="relative mb-4">
@@ -144,6 +149,7 @@
         </div>
       </div>
     </p-card>
+    <!-- Cards para buscar y crear reclamos  -->
   </div>
 
 
