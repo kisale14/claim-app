@@ -8,10 +8,6 @@
 
       <div class="flex flex-col items-center justify-center pb-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
-            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
-          </div>
-
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
               1,248
@@ -29,13 +25,8 @@
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Pendientes</h2>
         </div>
       </ng-template>
-
       <div class="flex flex-col items-center justify-center pb-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
-            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
-          </div>
-
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
               780
@@ -53,13 +44,8 @@
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Procedentes</h2>
         </div>
       </ng-template>
-
       <div class="flex flex-col items-center justify-center pb-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
-            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
-          </div>
-
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
               320
@@ -77,13 +63,8 @@
           <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos no procedentes</h2>
         </div>
       </ng-template>
-
       <div class="flex flex-col items-center justify-center pb-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
-            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
-          </div>
-
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
               120
@@ -97,7 +78,7 @@
     </p-card>
   </div>
   <div class="mb-4 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <p-card class="shadow-md border-round transition-all hover:shadow-xl overflow-hidden">
+    <p-card class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
       <div class="relative flex items-center justify-center p-8">
         <div class="relative w-[200px] h-[200px] flex items-center justify-center">
           <p-chart type="doughnut"
@@ -116,4 +97,62 @@
         </div>
       </div>
     </p-card>
+    <p-card class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+      <div class="relative flex items-center justify-center p-8">
+        <div class="relative w-[200px] h-[200px] flex items-center justify-center">
+          <p-chart type="bar"
+                  [data]="dataBar"
+                  [options]="optionsBar"
+                  style="width: 100%; height: 100%; display: block;" />
+        </div>
+      </div>
+    </p-card>
+    <p-card (click)="showSearch()" class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+      <div class="flex flex-col items-center p-6">
+        <!-- Imagen/Ilustración alusiva a búsqueda -->
+        <div class="relative mb-4">
+          <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center animate-pulse-slow">
+            <i class="pi pi-search text-black" style="font-size: 2.5rem"></i>
+
+          </div>
+        </div>
+
+        <!-- Título y descripción -->
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-bold text-slate-800 m-0">Buscar Reclamo</h2>
+          <p class="text-sm text-slate-500 m-0 max-w-[200px]">
+            Encuentra reclamos específicos por número, RUT o nombre
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <p-card (click)="showForm()" class="shadow-md border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+      <div class="flex flex-col items-center p-6">
+        <!-- Imagen/Ilustración alusiva a búsqueda -->
+        <div class="relative mb-4">
+          <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center animate-pulse-slow">
+            <i class="pi pi-file-edit text-black" style="font-size: 2.5rem"></i>
+          </div>
+        </div>
+
+        <!-- Título y descripción -->
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-bold text-slate-800 m-0">Crear Reclamos</h2>
+          <p class="text-sm text-slate-500 m-0 max-w-[200px]">
+            Crea nuevos reclamos para clientes
+          </p>
+        </div>
+      </div>
+    </p-card>
   </div>
+
+
+  <app-form-claim
+    [VisibilityForm]="VisibilityForm"
+    (visibleChange)="hideForm()"
+  />
+
+  <app-search-claim
+    [VisibilityForm]="VisibilitySearch"
+    (visibleChange)="hideSearch()"
+  />

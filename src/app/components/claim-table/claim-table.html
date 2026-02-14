@@ -5,6 +5,17 @@
       stripedRows
       size="small"
     >
+      <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="16" class="text-center justify-center text-gray-500">
+        <div class="flex flex-col items-center justify-center text-gray-500">
+          <i class="pi pi-inbox text-4xl mb-2"></i>
+          <p class="text-lg font-semibold">Sin registros</p>
+          <p class="text-sm">Mejora tu búsqueda para encontrar resultados</p>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
       <ng-template #caption>
         <div class="flex flex-col sm:flex-row gap-2 items-center">
           <p-multiselect

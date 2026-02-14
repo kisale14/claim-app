@@ -1,0 +1,98 @@
+<p-dialog
+  [modal]="true"
+  [closable]="false"
+  [visible]="VisibilityForm"
+  (onHide)="closeForm()"
+  class="rounded-2xl overflow-hidden"
+  [styleClass]="'p-dialog-header-sm'"
+  appendTo="body"
+  >
+
+  <!-- Header personalizado con título llamativo -->
+  <ng-template pTemplate="header">
+    <div class="w-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-5 -mt-2 -mx-2 rounded-t-2xl">
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 rounded-full p-3">
+          <i class="pi pi-search text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white m-0">Buscar Reclamo</h2>
+          <p class="text-sm text-orange-100 m-0 mt-1">Completa los datos para encontrar su reclamo</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Contenido del formulario -->
+  <div class="px-2 py-4">
+    <!-- Campo Usuario con diseño mejorado -->
+    <div class="mb-5">
+      <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-sort-numeric-up mr-2 text-orange-500"></i>
+        Nro. Requerimiento
+      </label>
+      <div class="relative">
+        <i class="pi pi-sort-numeric-up absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="username"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="R-1234"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresa el número de su requerimiento</p>
+    </div>
+
+    <!-- Campo Email con diseño mejorado -->
+    <div class="mb-6">
+      <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-user mr-2 text-orange-500"></i>
+        Nro. Ente
+      </label>
+      <div class="relative">
+        <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="email"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="140567"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresa el número de ente de su cliente</p>
+    </div>
+
+    <div class="mb-6">
+      <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-user mr-2 text-orange-500"></i>
+        C.I
+      </label>
+      <div class="relative">
+        <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="email"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="12345678"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresa el número de identificación de su cliente</p>
+    </div>
+  </div>
+
+  <!-- Footer con botones mejorados -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 px-2 pb-4">
+    <button pButton severity="danger" (click)="closeForm()">
+      <i class="pi pi-times" pButtonIcon></i>
+      <span pButtonLabel>Cancelar</span>
+    </button>
+    <button pButton (click)="closeForm()">
+      <i class="pi pi-check" pButtonIcon></i>
+      <span pButtonLabel>Buscar</span>
+    </button>
+    </div>
+  </ng-template>
+</p-dialog>
