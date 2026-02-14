@@ -1,0 +1,119 @@
+  <div class="mb-2 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Total Reclamos</h2>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
+            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
+          </div>
+
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              1,248
+            </span>
+            <p class="text-sm text-green-600 font-medium m-0 mt-1">
+              <i class="pi pi-arrow-up text-xs"></i> +12% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Pendientes</h2>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
+            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
+          </div>
+
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              780
+            </span>
+            <p class="text-sm text-red-600 font-medium m-0 mt-1">
+              <i class="pi pi-arrow-down text-xs"></i> -6% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Procedentes</h2>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
+            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
+          </div>
+
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              320
+            </span>
+            <p class="text-sm text-green-600 font-medium m-0 mt-1">
+              <i class="pi pi-check text-xs"></i> +50% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos no procedentes</h2>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-orange-100 rounded-full transition-colors duration-300 group-hover:bg-orange-200">
+            <i class="pi pi-file-edit text-orange-600 text-2xl"></i>
+          </div>
+
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              120
+            </span>
+            <p class="text-sm text-red-600 font-medium m-0 mt-1">
+              <i class="pi pi-cancel text-xs"></i> +50% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  <div class="mb-4 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <p-card class="shadow-md border-round transition-all hover:shadow-xl overflow-hidden">
+      <div class="relative flex items-center justify-center p-8">
+        <div class="relative w-[200px] h-[200px] flex items-center justify-center">
+          <p-chart type="doughnut"
+                  [data]="data"
+                  [options]="options"
+                  style="width: 100%; height: 100%; display: block;" />
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span class="text-4xl font-black text-slate-800 dark:text-white leading-none">
+              1,567
+            </span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest mt-1">
+              Total Reclamos Gestionados
+            </span>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>

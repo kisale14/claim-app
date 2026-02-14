@@ -1,0 +1,40 @@
+  <div class="card">
+    <p-table
+      [tableStyle]="{ 'min-width': '50rem' }"
+      showGridlines
+      stripedRows
+      size="small"
+    >
+      <ng-template #caption>
+        <div class="flex flex-col sm:flex-row gap-2 items-center">
+          <p-multiselect
+            display="chip"
+            optionLabel="header"
+            selectedItemsLabel="{0} columns selected"
+            class="w-full sm:w-80"
+            placeholder="Choose Columns"
+          />
+          <p-iconfield class="w-full sm:w-auto">
+            <p-inputicon class="pi pi-search" />
+            <input pInputText type="text" placeholder="Search..." class="w-full sm:w-64" />
+          </p-iconfield>
+        </div>
+      </ng-template>
+      <ng-template #header>
+        <tr>
+          <th style="text-align: center;">Nro. Reclamo</th>
+          <th style="text-align: center;">Status</th>
+          <th style="text-align: center;">Nombre / Razón Social</th>
+          <th style="text-align: center;">CI / RIF</th>
+          <th style="text-align: center;">Nro. Tlf</th>
+          <th style="text-align: center;">Fecha</th>
+          <th style="text-align: center;">Hora</th>
+          <th style="text-align: center;">Monto</th>
+          </tr>
+      </ng-template>
+      <ng-template #body let-product>
+        <tr>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
