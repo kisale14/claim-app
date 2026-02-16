@@ -28,7 +28,7 @@
           />
           <p-iconfield class="w-full sm:w-auto">
             <p-inputicon class="pi pi-search" />
-            <input pInputText type="text" placeholder="Search..." class="w-full sm:w-64" />
+            <input pInputText type="text" placeholder="Nro. Reclamo" (input)="dt.filterGlobal($event.target.value, 'claimNumber')" class="w-full sm:w-64" />
           </p-iconfield>
         </div>
       </ng-template>

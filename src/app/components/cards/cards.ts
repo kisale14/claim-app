@@ -1,14 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
 import { FormClaim } from '../form-claim/form-claim';
 import { SearchClaim } from '../search-claim/search-claim';
+import { ServicesClaim } from '../../services/services-claim.service';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cards',
-  imports: [CardModule, ChartModule, ButtonModule, FormClaim, SearchClaim],
+  imports: [CardModule, ChartModule, ButtonModule, FormClaim, SearchClaim, CommonModule],
   templateUrl: './cards.html',
   styleUrl: './cards.css',
 })
@@ -22,11 +24,28 @@ export class Cards {
 
   // Inyecciones necesarias
   private platformId = inject(PLATFORM_ID);
-  private cd = inject(ChangeDetectorRef); // Lo necesitas para el markForCheck()
+  private cd = inject(ChangeDetectorRef);
+
+  totalClaims$!: Observable<number>;
+  pendingCount$!: Observable<number>;
+  approvedCount$!: Observable<number>;
+  rejectedCount$!: Observable<number>;
+
+  constructor(private claimService: ServicesClaim) {}
 
   ngOnInit() {
-    this.initChart();
     this.initChartBar();
+
+    this.totalClaims$ = this.claimService.getTotalClaims();
+    this.pendingCount$ = this.claimService.getPendingClaimsCount();
+    this.approvedCount$ = this.claimService.getApprovedClaimsCount();
+    this.rejectedCount$ = this.claimService.getRejectedClaimsCount();
+
+    combineLatest([this.approvedCount$, this.rejectedCount$, this.pendingCount$]).subscribe(
+      ([approved, rejected, pending]) => {
+        this.initChart(approved, rejected, pending);
+      },
+    );
   }
 
   showForm() {
@@ -45,38 +64,39 @@ export class Cards {
     this.VisibilitySearch = false;
   }
 
-  initChart() {
+  initChart(approved: number, rejected: number, pending: number) {
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--text-color') || '#495057';
+      const total = approved + rejected + pending;
 
       this.data = {
         labels: ['Procedentes', 'No Procedentes', 'Pendientes'],
         datasets: [
           {
-            data: [540, 325, 702],
+            data: [approved, rejected, pending], // Usamos los valores dinámicos
             backgroundColor: [
-              '#06b6d4', // Cyan
-              '#ef4444', // Red (un rojo más moderno)
-              '#f59e0b', // Amber/Yellow
+              '#06b6d4', // Cyan para procedentes
+              '#ef4444', // Red para no procedentes
+              '#f59e0b', // Amber/Yellow para pendientes
             ],
             hoverBackgroundColor: ['#22d3ee', '#f87171', '#fbbf24'],
-            borderWidth: 2, // Añade separación entre los segmentos
+            borderWidth: 2,
             borderColor: documentStyle.getPropertyValue('--content-background') || '#ffffff',
           },
         ],
       };
 
       this.options = {
-        cutout: '75%', // Esto lo convierte en una "dona" elegante
+        cutout: '75%',
         plugins: {
           legend: {
             display: false,
-            position: 'bottom', // Leyendas abajo para dar más espacio
+            position: 'bottom',
             labels: {
               usePointStyle: true,
               color: textColor,
-              padding: 20, // Espacio entre leyenda y gráfico
+              padding: 20,
               font: { size: 14, weight: '500' },
             },
           },
@@ -84,8 +104,11 @@ export class Cards {
             padding: 12,
             bodyFont: { size: 14 },
             callbacks: {
-              // Un toque pro: añadir el símbolo de porcentaje o unidad
-              label: (context: any) => ` ${context.label}: ${context.raw} reclamos`,
+              label: (context: any) => {
+                const value = context.raw;
+                const percentage = ((value / total) * 100).toFixed(1);
+                return ` ${context.label}: ${value} reclamos (${percentage}%)`;
+              },
             },
           },
         },

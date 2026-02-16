@@ -24,7 +24,8 @@
   </ng-template>
 
   <!-- Contenido del formulario -->
-  <div class="px-2 py-4">
+  <form [formGroup]="searchClaimForm">
+      <div class="px-2 py-4">
     <!-- Campo Usuario con diseño mejorado -->
     <div class="mb-5">
       <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
@@ -34,6 +35,7 @@
       <div class="relative">
         <i class="pi pi-sort-numeric-up absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
         <input
+          formControlName="claimNumber"
           pInputText
           id="username"
           class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
@@ -48,19 +50,20 @@
     <div class="mb-6">
       <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-user mr-2 text-orange-500"></i>
-        Nro. Ente
+        Nombre de cliente
       </label>
       <div class="relative">
         <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
         <input
           pInputText
+          formControlName="name"
           id="email"
           class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
           autocomplete="off"
           placeholder="140567"
         />
       </div>
-      <p class="text-xs text-slate-400 mt-1">Ingresa el número de ente de su cliente</p>
+      <p class="text-xs text-slate-400 mt-1">Ingresa el nombre de su cliente</p>
     </div>
 
     <div class="mb-6">
@@ -71,6 +74,7 @@
       <div class="relative">
         <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
         <input
+          formControlName="identification"
           pInputText
           id="email"
           class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
@@ -80,7 +84,8 @@
       </div>
       <p class="text-xs text-slate-400 mt-1">Ingresa el número de identificación de su cliente</p>
     </div>
-  </div>
+      </div>
+  </form>
 
   <!-- Footer con botones mejorados -->
   <ng-template pTemplate="footer">
@@ -89,7 +94,7 @@
       <i class="pi pi-times" pButtonIcon></i>
       <span pButtonLabel>Cancelar</span>
     </button>
-    <button pButton (click)="closeForm()">
+    <button pButton (click)="onSearch()">
       <i class="pi pi-check" pButtonIcon></i>
       <span pButtonLabel>Buscar</span>
     </button>

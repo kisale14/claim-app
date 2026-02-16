@@ -11,7 +11,7 @@
         <div class="flex items-center gap-4">
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
-              1,248
+              {{ totalClaims$ | async }}
             </span>
             <p class="text-sm text-green-600 font-medium m-0 mt-1">
               <i class="pi pi-arrow-up text-xs"></i> +12% esta semana
@@ -30,7 +30,7 @@
         <div class="flex items-center gap-4">
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
-              780
+              {{ pendingCount$ | async }}
             </span>
             <p class="text-sm text-red-600 font-medium m-0 mt-1">
               <i class="pi pi-arrow-down text-xs"></i> -6% esta semana
@@ -49,7 +49,7 @@
         <div class="flex items-center gap-4">
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
-              320
+              {{ approvedCount$ | async }}
             </span>
             <p class="text-sm text-green-600 font-medium m-0 mt-1">
               <i class="pi pi-check text-xs"></i> +50% esta semana
@@ -68,7 +68,7 @@
         <div class="flex items-center gap-4">
           <div class="text-center">
             <span class="block text-4xl font-bold text-slate-800 tracking-tight">
-              120
+              {{ rejectedCount$ | async }}
             </span>
             <p class="text-sm text-red-600 font-medium m-0 mt-1">
               <i class="pi pi-cancel text-xs"></i> +50% esta semana
@@ -91,7 +91,7 @@
 
           <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span class="text-4xl text-slate-800 font-bold tracking-tight">
-              1,567
+              {{ totalClaims$ | async }}
             </span>
             <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest mt-1">
               Total Reclamos Gestionados

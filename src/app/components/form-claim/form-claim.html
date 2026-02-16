@@ -6,6 +6,7 @@
   class="rounded-2xl overflow-hidden"
   [styleClass]="'p-dialog-header-sm'"
   appendTo="body"
+  [style]="{width: '600px'}"
   >
 
   <!-- Header personalizado con título llamativo -->
@@ -24,43 +25,103 @@
   </ng-template>
 
   <!-- Contenido del formulario -->
-  <div class="px-2 py-4">
-    <!-- Campo Usuario con diseño mejorado -->
+  <form  [formGroup]="claimForm" >
+    <div class="px-2 py-4">
+    <!-- Campo Cliente -->
     <div class="mb-5">
       <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-user mr-2 text-orange-500"></i>
-        Nombre de Usuario
+        Nombre del cliente
       </label>
       <div class="relative">
         <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
         <input
           pInputText
           id="username"
+          formControlName="name"
           class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
           autocomplete="off"
           placeholder="ej. juan.perez"
         />
       </div>
-      <p class="text-xs text-slate-400 mt-1">Ingresa tu nombre de usuario registrado</p>
+      <p class="text-xs text-slate-400 mt-1">Ingresar nombre del cliente</p>
     </div>
-
-    <!-- Campo Email con diseño mejorado -->
-    <div class="mb-6">
-      <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
-        <i class="pi pi-envelope mr-2 text-orange-500"></i>
-        Correo Electrónico
+    <!-- Campo Cédula -->
+    <div class="mb-5">
+      <label for="cedula" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-id-card mr-2 text-orange-500"></i>
+        Cédula o RIF
       </label>
       <div class="relative">
-        <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
         <input
           pInputText
-          id="email"
+          formControlName="identification"
+          id="cedula"
           class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
           autocomplete="off"
-          placeholder="ej. correo@ejemplo.com"
+          placeholder="ej. V-12345678"
         />
       </div>
-      <p class="text-xs text-slate-400 mt-1">Te enviaremos la confirmación a este correo</p>
+      <p class="text-xs text-slate-400 mt-1">Ingresar cédula o RIF del cliente</p>
+    </div>
+    <!-- Campo Telefono -->
+    <div class="mb-5">
+      <label for="telefono" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-phone mr-2 text-orange-500"></i>
+        Teléfono
+      </label>
+      <div class="relative">
+        <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="telefono"
+          formControlName="phone"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="ej. 0412-1234567"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar número de teléfono del cliente</p>
+    </div>
+    <!-- Campo fecha -->
+    <div class="mb-5">
+      <label for="fecha" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-calendar mr-2 text-orange-500"></i>
+        Fecha Incidencia
+      </label>
+      <div class="relative">
+        <i class="pi pi-calendar absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <p-datepicker
+          id="fecha"
+          formControlName="date"
+          dateFormat="dd/mm/yy"
+          placeholder="dd/mm/yyyy"
+          [showIcon]="true"
+          [showOnFocus]="false"
+          inputStyleClass="w-full pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all">
+        </p-datepicker>
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar fecha del incidente</p>
+    </div>
+    <!-- Campo Monto -->
+    <div class="mb-5">
+      <label for="monto" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-money-bill mr-2 text-orange-500"></i>
+        Monto Incidencia
+      </label>
+      <div class="relative">
+        <i class="pi pi-money-bill absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="monto"
+          formControlName="mount"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="ej. 123,456.78"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar monto del incidente</p>
     </div>
 
     <!-- Línea divisoria decorativa -->
@@ -88,7 +149,8 @@
       ></textarea>
       <p class="text-xs text-slate-400 mt-1">Máximo 500 caracteres</p>
     </div>
-  </div>
+    </div>
+  </form>
 
   <!-- Footer con botones mejorados -->
   <ng-template pTemplate="footer">
@@ -97,10 +159,12 @@
       <i class="pi pi-times" pButtonIcon></i>
       <span pButtonLabel>Cancelar</span>
     </button>
-    <button pButton (click)="closeForm()">
+    <button pButton (click)="submitForm()">
       <i class="pi pi-check" pButtonIcon></i>
       <span pButtonLabel>Crear</span>
     </button>
     </div>
   </ng-template>
 </p-dialog>
+
+<p-toast />

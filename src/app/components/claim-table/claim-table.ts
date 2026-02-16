@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -29,6 +29,7 @@ import { ButtonModule } from 'primeng/button';
 export class ClaimTable {
   claim$: Observable<Claim[]>;
   claims: Claim[] = [];
+  @ViewChild('dt') dt!: Table;
 
   constructor(private servicesClaim: ServicesClaim) {
     this.claim$ = this.servicesClaim.getClaims();

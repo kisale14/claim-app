@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { Claim } from '../../model/claim';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -27,18 +26,110 @@ export class ServicesClaim {
     return this.claims$;
   }
 
-  private loadClaims(): void{
-    this.http.get<Claim[]>(this.dataClaimUrl).pipe(
-      tap(claims => {
-        console.log(`✅ Datos cargados: ${claims.length} reclamos`);
-      }),
-      catchError(error => {
-        console.error('❌ Error al cargar los reclamos:', error);
+  // Método para obtener el total de reclamos
+  getTotalClaims(): Observable<number> {
+    return this.claims$.pipe(map((claims) => claims.length));
+  }
 
-        return of([] as Claim[])
-      })
-    ).subscribe(claims => {
-      this.claimsSubject.next(claims);
-    });
+  // Método para obtener el número de reclamos pendientes (status = 1)
+  getPendingClaimsCount(): Observable<number> {
+    return this.claims$.pipe(map((claims) => claims.filter((claim) => claim.status === 1).length));
+  }
+
+  // Método para obtener el número de reclamos aprobados (status = 2)
+  getApprovedClaimsCount(): Observable<number> {
+    return this.claims$.pipe(map((claims) => claims.filter((claim) => claim.status === 2).length));
+  }
+
+  // Método para obtener el número de reclamos rechazados (status = 3)
+  getRejectedClaimsCount(): Observable<number> {
+    return this.claims$.pipe(map((claims) => claims.filter((claim) => claim.status === 3).length));
+  }
+
+  // Método para formatear el registro de un reclamo
+  formatClaimObject(claimData: any): Claim {
+    const claim = new Claim();
+
+    claim.id = claimData.id || this.generateId();
+    claim.claimNumber = claimData.claimNumber || `CLM-${Date.now()}`;
+    claim.creationDate = claimData.creationDate || new Date();
+    claim.status = 1;
+    claim.statusName = 'Pendiente';
+    claim.name = claimData.name || '';
+    claim.identification = claimData.identification || '';
+    claim.phone = claimData.phone || '';
+    claim.dateOfIncident = claimData.dateOfIncident || claimData.date || new Date();
+    claim.mount = claimData.mount || '0';
+    claim.userCreation = claimData.userCreation || 1;
+    this.saveFormattedClaim(claim);
+    return claim;
+  }
+
+  filterClaims(filterData: {
+    claimNumber?: string;
+    name?: string;
+    identification?: string;
+  }): Observable<Claim[]> {
+    return this.claims$.pipe(
+      map((claims) => {
+        return claims.filter((claim) => {
+          let matches = true;
+
+          // Filtrar por número de reclamo (si se proporciona)
+          if (filterData.claimNumber) {
+            matches =
+              matches &&
+              claim.claimNumber.toLowerCase().includes(filterData.claimNumber.toLowerCase());
+          }
+
+          // Filtrar por nombre (si se proporciona)
+          if (filterData.name) {
+            matches = matches && claim.name.toLowerCase().includes(filterData.name.toLowerCase());
+          }
+
+          // Filtrar por identificación (si se proporciona)
+          if (filterData.identification) {
+            matches = matches && claim.identification.includes(filterData.identification);
+          }
+
+          return matches;
+        });
+      }),
+    );
+  }
+
+  // Método para guardar el reclamo formateado
+  saveFormattedClaim(formattedClaim: Claim): void {
+    const currentClaims = this.claimsSubject.value;
+    const updatedClaims = [...currentClaims, formattedClaim];
+
+    this.claimsSubject.next(updatedClaims);
+    console.log(this.claimsSubject.value);
+    console.log('✅ Reclamo guardado y métricas actualizadas reactivamente');
+  }
+
+  private loadClaims(): void {
+    this.http
+      .get<Claim[]>(this.dataClaimUrl)
+      .pipe(
+        tap((claims) => {
+          console.log(`✅ Datos cargados: ${claims.length} reclamos`);
+        }),
+        catchError((error) => {
+          console.error('❌ Error al cargar los reclamos:', error);
+
+          return of([] as Claim[]);
+        }),
+      )
+      .subscribe((claims) => {
+        this.claimsSubject.next(claims);
+      });
+  }
+
+  private generateId(): number {
+    const currentClaims = this.claimsSubject.value;
+    if (currentClaims.length === 0) return 1;
+    const maxId = Math.max(...currentClaims.map((claim) => claim.id));
+    return maxId + 1;
   }
 }
