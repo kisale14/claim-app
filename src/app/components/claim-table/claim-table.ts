@@ -6,6 +6,10 @@ import { Table, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { ServicesClaim } from '../../services/services-claim.service';
+import { Observable } from 'rxjs';
+import { Claim } from '../../../model/claim';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-claim-table',
@@ -17,8 +21,23 @@ import { InputTextModule } from 'primeng/inputtext';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
+    ButtonModule,
   ],
   templateUrl: './claim-table.html',
   styleUrl: './claim-table.css',
 })
-export class ClaimTable {}
+export class ClaimTable {
+  claim$: Observable<Claim[]>;
+  claims: Claim[] = [];
+
+  constructor(private servicesClaim: ServicesClaim) {
+    this.claim$ = this.servicesClaim.getClaims();
+  }
+
+  ngOnInit() {
+    this.claim$.subscribe((claims) => {
+      this.claims = claims;
+      console.log('Datos recibidos en el componente:', claims);
+    });
+  }
+}
