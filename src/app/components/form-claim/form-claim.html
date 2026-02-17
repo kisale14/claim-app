@@ -1,0 +1,244 @@
+<p-dialog
+  [modal]="true"
+  [closable]="false"
+  [visible]="VisibilityForm"
+  (onHide)="closeForm()"
+  class="rounded-2xl overflow-hidden"
+  [styleClass]="'p-dialog-header-sm'"
+  appendTo="body"
+  [style]="{width: '600px'}"
+  >
+
+  <!-- Header personalizado con título llamativo -->
+  <ng-template pTemplate="header">
+    <div class="w-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-5 -mt-2 -mx-2 rounded-t-2xl">
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 rounded-full p-3">
+          <i class="pi pi-file-edit text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white m-0">Formulario de Reclamo</h2>
+          <p *ngIf="numberClaim" class="text-sm text-orange-100 m-0 mt-1">Número de reclamo: {{ numberClaim }}</p>
+          <p *ngIf="!numberClaim" class="text-sm text-orange-100 m-0 mt-1">Completa los datos para registrar tu reclamo</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Contenido del formulario -->
+  <form  [formGroup]="claimForm" >
+    <div class="px-2 py-4">
+    <!-- Campo Status -->
+    <div *ngIf="numberClaim" class="mb-5">
+  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+    <i class="pi pi-check-square mr-2 text-orange-500"></i>
+    Status del Reclamo
+  </label>
+
+  <div class="flex gap-3">
+        <!-- Botón de status (se mantiene igual) -->
+    <div class="relative flex-1">
+      <p-button
+        *ngIf="selectedClaim?.status === 1"
+        label="{{selectedClaim?.statusName}}"
+        [rounded]="true"
+        severity="warn"
+        styleClass="h-[46px] pl-10 justify-start border-0"
+      />
+      <p-button
+        *ngIf="selectedClaim?.status === 2"
+        label="{{selectedClaim?.statusName}}"
+        [rounded]="true"
+        severity="info"
+        styleClass="h-[46px] pl-10 justify-start border-0"
+      />
+      <p-button
+        *ngIf="selectedClaim?.status === 3"
+        label="{{selectedClaim?.statusName}}"
+        [rounded]="true"
+        severity="danger"
+        styleClass="h-[46px] pl-10 justify-start border-0"
+      />
+    </div>
+    <!-- Select con opciones Aprobar/Rechazar -->
+    <div class="relative w-full" *ngIf="selectedClaim?.status === 1">
+      <i class="pi pi-chart-scatter absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 z-10 text-sm"></i>
+      <select
+      (change)="onActionSelected($event)"
+        class="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl focus:border-orange-300 dark:focus:border-orange-500 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 appearance-none text-sm"
+        style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239ca3af%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22></polyline></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2rem;"
+      >
+        <option value="" disabled selected class="bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500">Seleccione una acción</option>
+        <option value="2" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">✅ Aprobar</option>
+        <option value="3" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">❌ Rechazar</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Seleccione acción para el reclamo</p>
+</div>
+    <!-- Campo Cliente -->
+    <div class="mb-5">
+      <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-user mr-2 text-orange-500"></i>
+        Nombre del cliente
+      </label>
+      <div class="relative">
+        <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="username"
+          formControlName="name"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="ej. juan.perez"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar nombre del cliente</p>
+    </div>
+    <!-- Campo Cédula -->
+    <div class="mb-5">
+      <label for="cedula" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-id-card mr-2 text-orange-500"></i>
+        Cédula o RIF
+      </label>
+      <div class="relative">
+        <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          formControlName="identification"
+          id="cedula"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="ej. V-12345678"
+          (input)="filterIdentification($event)"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar cédula o RIF del cliente</p>
+    </div>
+    <!-- Campo Telefono -->
+<div class="mb-5">
+  <label for="telefono" class="block text-sm font-semibold text-slate-700 mb-2">
+    <i class="pi pi-phone mr-2 text-orange-500"></i>
+    Teléfono
+  </label>
+
+  <div class="relative flex">
+    <!-- Select con el mismo estilo que el input -->
+    <select
+      #phoneSelect
+      (change)="onPhoneCodeChange(phoneSelect.value)"
+      class="w-30 pl-3 pr-8 py-3 border border-r-0 border-slate-200 dark:border-slate-600 rounded-l-xl focus:border-orange-300 dark:focus:border-orange-600 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+    >
+      <option value="+58412" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800" selected>+58412</option>
+      <option value="+58422" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58422</option>
+      <option value="+58414" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58414</option>
+      <option value="+58424" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58424</option>
+      <option value="+58416" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58416</option>
+      <option value="+58426" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58426</option>
+    </select>
+
+    <!-- Input con borde izquierdo redondeado (sin borde izquierdo) -->
+    <div class="relative flex-1">
+      <i class="pi pi-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
+      <input
+        pInputText
+        id="telefono"
+        (input)="limitPhoneInput($event)"
+        formControlName="phone"
+        class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-r-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+        autocomplete="off"
+        placeholder="ej. 123-4567"
+      />
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-400 mt-1">Ingresar número de teléfono del cliente</p>
+</div>
+    <!-- Campo fecha -->
+    <div class="mb-5">
+      <label for="fecha" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-calendar mr-2 text-orange-500"></i>
+        Fecha Incidencia
+      </label>
+      <div class="relative">
+        <i class="pi pi-calendar absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <p-datepicker
+          id="fecha"
+          formControlName="date"
+          dateFormat="dd/mm/yy"
+          placeholder="dd/mm/yyyy"
+          [showIcon]="true"
+          [showOnFocus]="false"
+          inputStyleClass="w-full pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all">
+        </p-datepicker>
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar fecha del incidente</p>
+    </div>
+    <!-- Campo Monto -->
+    <div class="mb-5">
+      <label for="monto" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-money-bill mr-2 text-orange-500"></i>
+        Monto Incidencia
+      </label>
+      <div class="relative">
+        <i class="pi pi-money-bill absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          pInputText
+          id="monto"
+          formControlName="mount"
+          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+          autocomplete="off"
+          placeholder="ej. 123,456.78"
+          (input)="formatMountFromRight($event)"
+          (keydown)="handleMountKeyDown($event)"
+          (blur)="validateMountOnBlur()"
+        />
+      </div>
+      <p class="text-xs text-slate-400 mt-1">Ingresar monto del incidente</p>
+    </div>
+
+    <!-- Línea divisoria decorativa -->
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-slate-200"></div>
+      </div>
+      <div class="relative flex justify-center">
+        <span class="bg-white px-4 text-xs text-slate-400">información del reclamo</span>
+      </div>
+    </div>
+
+    <!-- Campo adicional para reclamo -->
+    <div class="mb-6">
+      <label for="reclamo" class="block text-sm font-semibold text-slate-700 mb-2">
+        <i class="pi pi-comment mr-2 text-orange-500"></i>
+        Detalle del Reclamo
+      </label>
+      <textarea
+        pInputTextarea
+        id="reclamo"
+        rows="3"
+        class="w-full p-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all resize-none"
+        placeholder="Describe brevemente tu reclamo..."
+      ></textarea>
+      <p class="text-xs text-slate-400 mt-1">Máximo 500 caracteres</p>
+    </div>
+    </div>
+  </form>
+
+  <!-- Footer con botones mejorados -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 px-2 pb-4">
+    <button pButton severity="danger" (click)="closeForm()">
+      <i class="pi pi-times" pButtonIcon></i>
+      <span pButtonLabel>Cancelar</span>
+    </button>
+    <button pButton (click)="submitForm()">
+      <i class="pi pi-check" pButtonIcon></i>
+      <span pButtonLabel>Crear</span>
+    </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast [preventOpenDuplicates]="true"/>

@@ -1,0 +1,164 @@
+  <div class="mb-2 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Cards con totales de reclamos -->
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Total Reclamos</h2>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              {{ totalClaims$ | async }}
+            </span>
+            <p class="text-sm text-green-600 font-medium m-0 mt-1">
+              <i class="pi pi-arrow-up text-xs"></i> +12% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Pendientes</h2>
+        </div>
+      </ng-template>
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              {{ pendingCount$ | async }}
+            </span>
+            <p class="text-sm text-red-600 font-medium m-0 mt-1">
+              <i class="pi pi-arrow-down text-xs"></i> -6% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos Procedentes</h2>
+        </div>
+      </ng-template>
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              {{ approvedCount$ | async }}
+            </span>
+            <p class="text-sm text-green-600 font-medium m-0 mt-1">
+              <i class="pi pi-check text-xs"></i> +50% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="block shadow-lg border-round border-b-4 border-orange-500 transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer">
+      <ng-template pTemplate="header">
+        <div class="pt-6 text-center">
+          <h2 class="text-xl font-semibold text-slate-600 m-0">Reclamos no procedentes</h2>
+        </div>
+      </ng-template>
+      <div class="flex flex-col items-center justify-center pb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <span class="block text-4xl font-bold text-slate-800 tracking-tight">
+              {{ rejectedCount$ | async }}
+            </span>
+            <p class="text-sm text-red-600 font-medium m-0 mt-1">
+              <i class="pi pi-cancel text-xs"></i> +50% esta semana
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <!-- Cards con totales de reclamos -->
+  </div>
+  <div class="mb-4 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Cards con gráficos  -->
+    <p-card class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+      <div class="relative flex items-center justify-center p-8">
+        <div class="relative w-[200px] h-[200px] flex items-center justify-center">
+          <p-chart type="doughnut"
+                  [data]="data"
+                  [options]="options"
+                  style="width: 100%; height: 100%; display: block;" />
+
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span class="text-4xl text-slate-800 font-bold tracking-tight">
+              {{ totalClaims$ | async }}
+            </span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest mt-1">
+              Total Reclamos Gestionados
+            </span>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+      <div class="relative flex items-center justify-center p-8">
+        <div class="relative w-[200px] h-[200px] flex items-center justify-center">
+          <p-chart type="bar"
+                  [data]="dataBar"
+                  [options]="optionsBar"
+                  style="width: 100%; height: 100%; display: block;" />
+        </div>
+      </div>
+    </p-card>
+    <!-- Cards con gráficos  -->
+    <!-- Cards para buscar y crear reclamos  -->
+    <p-card (click)="showSearch()" class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+      <div class="flex flex-col items-center p-6">
+        <!-- Imagen/Ilustración alusiva a búsqueda -->
+        <div class="relative mb-4">
+          <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center animate-pulse-slow">
+            <i class="pi pi-search text-black" style="font-size: 2.5rem"></i>
+
+          </div>
+        </div>
+
+        <!-- Título y descripción -->
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-bold text-slate-800 m-0">Buscar Reclamo</h2>
+          <p class="text-sm text-slate-500 m-0 max-w-[200px]">
+            Encuentra reclamos específicos por número, RUT o nombre
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <p-card (click)="showForm()" class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+      <div class="flex flex-col items-center p-6">
+        <!-- Imagen/Ilustración alusiva a búsqueda -->
+        <div class="relative mb-4">
+          <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center animate-pulse-slow">
+            <i class="pi pi-file-edit text-black" style="font-size: 2.5rem"></i>
+          </div>
+        </div>
+
+        <!-- Título y descripción -->
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-bold text-slate-800 m-0">Crear Reclamos</h2>
+          <p class="text-sm text-slate-500 m-0 max-w-[200px]">
+            Crea nuevos reclamos para clientes
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <!-- Cards para buscar y crear reclamos  -->
+  </div>
+
+
+  <app-form-claim
+    [VisibilityForm]="VisibilityForm"
+    (visibleChange)="hideForm()"
+  />
+
+  <app-search-claim
+    [VisibilityForm]="VisibilitySearch"
+    (visibleChange)="hideSearch()"
+  />
