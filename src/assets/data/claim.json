@@ -9,7 +9,7 @@
     "identification": "123456789",
     "phone": "555-0101",
     "dateOfIncident": "2024-01-10T14:20:00Z",
-    "mount": "1500.50",
+    "mount": "1,500.50",
     "userCreation": 101
   },
   {
@@ -22,7 +22,7 @@
     "identification": "987654321",
     "phone": "555-0202",
     "dateOfIncident": "2024-01-12T09:00:00Z",
-    "mount": "2300.00",
+    "mount": "2,300.00",
     "userCreation": 102
   },
   {
@@ -48,7 +48,7 @@
     "identification": "321654987",
     "phone": "555-0404",
     "dateOfIncident": "2024-01-19T11:30:00Z",
-    "mount": "3200.00",
+    "mount": "3,200.00",
     "userCreation": 103
   },
   {
@@ -87,7 +87,7 @@
     "identification": "159357456",
     "phone": "555-0707",
     "dateOfIncident": "2024-01-24T10:00:00Z",
-    "mount": "5600.00",
+    "mount": "5,600.00",
     "userCreation": 104
   },
   {
@@ -113,7 +113,7 @@
     "identification": "951753456",
     "phone": "555-0909",
     "dateOfIncident": "2024-01-29T15:30:00Z",
-    "mount": "1100.00",
+    "mount": "1,100.00",
     "userCreation": 102
   },
   {
