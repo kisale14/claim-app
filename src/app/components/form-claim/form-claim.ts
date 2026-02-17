@@ -35,6 +35,7 @@ export class FormClaim {
   @Output() visibleChange = new EventEmitter<boolean>();
 
   numberClaim: string = '';
+  selectedClaim: Claim | null = null;
   selectedPhoneCode: string = '+58412';
 
   private messageService = inject(MessageService);
@@ -63,6 +64,7 @@ export class FormClaim {
     if (newId > 0) {
       this.servicesClaim.getClaimById(newId).subscribe((claim) => {
         if (claim) {
+          this.selectedClaim = claim;
           this.numberClaim = claim.claimNumber;
           this.loadDataForm(claim);
         }
@@ -73,6 +75,15 @@ export class FormClaim {
         this.claimForm.patchValue({ date: new Date() });
       }
     }
+  }
+
+  onActionSelected(event: any): void {
+    const selectedValue = event.target.value;
+    const selectedText = event.target.options[event.target.selectedIndex].text;
+
+    this.servicesClaim.updateClaimStatus(this.selectedClaim!.id, parseInt(selectedValue))
+
+    this.closeForm();
   }
 
   loadDataForm(claimData: Claim) {

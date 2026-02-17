@@ -135,6 +135,79 @@ export class ServicesClaim {
     return this.getClaims().pipe(map((claims) => claims.find((c) => c.id === id)));
   }
 
+  updateClaimStatus(
+    id: number,
+    statusId: number,
+  ): { success: boolean; error?: string; claim?: Claim } {
+    try {
+      const currentClaims = this.claimsSubject.value;
+
+      // Buscar el índice del reclamo por ID
+      const claimIndex = currentClaims.findIndex((claim) => claim.id === id);
+
+      // Validar que el reclamo existe
+      if (claimIndex === -1) {
+        return {
+          success: false,
+          error: `No se encontró el reclamo con ID: ${id}`,
+        };
+      }
+
+      // Validar que el statusId sea válido (1, 2 o 3)
+      if (![1, 2, 3].includes(statusId)) {
+        return {
+          success: false,
+          error: `Status inválido: ${statusId}. Debe ser 1 (Pendiente), 2 (Aprobado) o 3 (Rechazado)`,
+        };
+      }
+
+      // Crear una copia actualizada del reclamo
+      const updatedClaim = {
+        ...currentClaims[claimIndex],
+        status: statusId,
+        statusName: this.getStatusName(statusId),
+      };
+
+      // Crear un nuevo array con el reclamo actualizado
+      const updatedClaims = [...currentClaims];
+      updatedClaims[claimIndex] = updatedClaim;
+
+      // Actualizar el BehaviorSubject
+      this.claimsSubject.next(updatedClaims);
+
+      console.log(
+        `✅ Reclamo ID ${id} actualizado a status ${statusId} (${this.getStatusName(statusId)})`,
+      );
+
+      return {
+        success: true,
+        claim: updatedClaim,
+      };
+    } catch (error) {
+      console.error('❌ Error al actualizar reclamo:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error desconocido al actualizar',
+      };
+    }
+  }
+
+  /**
+   * Método auxiliar para obtener el nombre del status
+   */
+  private getStatusName(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Pendiente';
+      case 2:
+        return 'Aprobado';
+      case 3:
+        return 'Rechazado';
+      default:
+        return 'Desconocido';
+    }
+  }
+
   private loadClaims(): void {
     this.http
       .get<Claim[]>(this.dataClaimUrl)

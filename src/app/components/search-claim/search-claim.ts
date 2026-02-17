@@ -37,6 +37,9 @@ export class SearchClaim {
   }
 
   onSearch() {
+    this.servicesClaim.filterClaims(this.searchClaimForm.value).subscribe((filteredClaims) => {
+      console.log('Reclamos filtrados:', filteredClaims);
+    });
     console.log(this.searchClaimForm.value)
   }
 }
