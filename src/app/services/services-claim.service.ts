@@ -46,10 +46,33 @@ export class ServicesClaim {
     return this.claims$.pipe(map((claims) => claims.filter((claim) => claim.status === 3).length));
   }
 
-  // Método para formatear el registro de un reclamo
-  formatClaimObject(claimData: any): Claim {
+  saveFormattedClaim(formattedClaim: Claim): { success: boolean; error?: string } {
+    try {
+      const currentClaims = this.claimsSubject.value;
+      const updatedClaims = [...currentClaims, formattedClaim];
+
+      // Validación mínima
+      if (!formattedClaim.id) {
+        return { success: false, error: 'El claim no tiene ID' };
+      }
+
+      this.claimsSubject.next(updatedClaims);
+      return { success: true }; // Solo éxito, sin mensaje
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      };
+    }
+  }
+
+  formatClaimObject(claimData: any): {
+    claim: Claim;
+    result: { success: boolean; error?: string };
+  } {
     const claim = new Claim();
 
+    // Asignaciones directas
     claim.id = claimData.id || this.generateId();
     claim.claimNumber = claimData.claimNumber || `CLM-${Date.now()}`;
     claim.creationDate = claimData.creationDate || new Date();
@@ -61,8 +84,11 @@ export class ServicesClaim {
     claim.dateOfIncident = claimData.dateOfIncident || claimData.date || new Date();
     claim.mount = claimData.mount || '0';
     claim.userCreation = claimData.userCreation || 1;
-    this.saveFormattedClaim(claim);
-    return claim;
+
+    // Guardar y devolver TODO: claim + resultado
+    const result = this.saveFormattedClaim(claim);
+
+    return { claim, result };
   }
 
   filterClaims(filterData: {
@@ -96,16 +122,6 @@ export class ServicesClaim {
         });
       }),
     );
-  }
-
-  // Método para guardar el reclamo formateado
-  saveFormattedClaim(formattedClaim: Claim): void {
-    const currentClaims = this.claimsSubject.value;
-    const updatedClaims = [...currentClaims, formattedClaim];
-
-    this.claimsSubject.next(updatedClaims);
-    console.log(this.claimsSubject.value);
-    console.log('✅ Reclamo guardado y métricas actualizadas reactivamente');
   }
 
   getClaimById(id: number): Observable<Claim | undefined> {

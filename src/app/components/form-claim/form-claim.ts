@@ -24,7 +24,7 @@ import { InputText } from "primeng/inputtext";
     ToastModule,
     CommonModule,
     SelectModule,
-],
+  ],
   templateUrl: './form-claim.html',
   styleUrl: './form-claim.css',
   providers: [MessageService],
@@ -35,6 +35,7 @@ export class FormClaim {
   @Output() visibleChange = new EventEmitter<boolean>();
 
   numberClaim: string = '';
+  selectedPhoneCode: string = '+58412';
 
   private messageService = inject(MessageService);
 
@@ -102,24 +103,90 @@ export class FormClaim {
 
   submitForm() {
     if (this.claimForm.valid) {
-      this.servicesClaim.formatClaimObject(this.claimForm.value);
-      this.claimForm.reset(); // Borra los datos del formulario
-      this.closeForm();
+      // Obtener el valor actual del teléfono (solo números, sin guión)
+      const phoneNumber = this.claimForm.get('phone')?.value || '';
+
+      // Crear el teléfono completo uniendo código + número
+      const fullPhone = this.selectedPhoneCode + phoneNumber;
+
+      // Crear una copia de los valores del formulario
+      const formValue = { ...this.claimForm.value };
+
+      // Reemplazar phone con el valor completo
+      formValue.phone = fullPhone;
+
+      // 1. El servicio hace su trabajo y devuelve resultado
+      const { claim, result } = this.servicesClaim.formatClaimObject(formValue);
+
+      // 2. Mostrar mensaje según el resultado
+      if (result.success) {
+        this.messageService.add({
+          severity: 'success',
+          summary: '✅ Reclamo guardado',
+          detail: `Reclamo creado correctamente`,
+        });
+
+        // Resetear el formulario
+        this.claimForm.reset({
+          date: new Date(),
+          mount: '0.00',
+        });
+
+        // Resetear el código seleccionado al valor por defecto
+        this.selectedPhoneCode = '+58412';
+
+        this.closeForm();
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: '❌ Error al guardar',
+          detail: result.error || 'No se pudo guardar el reclamo',
+        });
+      }
     } else {
-      // Marcar todos los campos como tocados para mostrar errores de validación
+      // Marcar campos inválidos
       Object.keys(this.claimForm.controls).forEach((key) => {
         this.claimForm.get(key)?.markAsTouched();
       });
-      this.showError();
+
+      this.messageService.add({
+        severity: 'error',
+        summary: '❌ Formulario inválido',
+        detail: 'Por favor complete todos los campos requeridos',
+      });
     }
   }
 
-  showError() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error al enviar datos',
-      detail: 'Por favor, revise los campos del formulario.',
-    });
+  limitPhoneInput(event: any): void {
+    const input = event.target;
+    let value = input.value;
+
+    // 1. Eliminar cualquier caracter que no sea número
+    value = value.replace(/[^0-9]/g, '');
+
+    // 2. Limitar a máximo 7 dígitos
+    if (value.length > 7) {
+      value = value.slice(0, 7);
+    }
+
+    // 3. Guardar SOLO los números en el formulario
+    this.claimForm.get('phone')?.setValue(value, { emitEvent: true });
+
+    // 4. APLICAR FORMATO CON GUIÓN DIRECTAMENTE EN EL DOM
+    let displayValue = value;
+    if (value.length > 3) {
+      displayValue = value.slice(0, 3) + '-' + value.slice(3);
+    }
+
+    // 5. Forzar la actualización visual del input
+    setTimeout(() => {
+      input.value = displayValue;
+    }, 0);
+  }
+
+  onPhoneCodeChange(selectedValue: string): void {
+    this.selectedPhoneCode = selectedValue;
+    console.log('Código seleccionado:', selectedValue);
   }
 
   filterIdentification(event: any) {
@@ -307,6 +374,4 @@ export class FormClaim {
       control.markAsTouched();
     }
   }
-
-
 }
