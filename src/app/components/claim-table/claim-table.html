@@ -3,7 +3,12 @@
       [value]="(claim$ | async) || []"
       [tableStyle]="{ 'min-width': '50rem' }"
       showGridlines
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 30]"
+      [globalFilterFields]="['name']"
       stripedRows
+      scrollHeight="430px"
       size="small"
     >
       <ng-template pTemplate="emptymessage">
@@ -28,7 +33,7 @@
           />
           <p-iconfield class="w-full sm:w-auto">
             <p-inputicon class="pi pi-search" />
-            <input pInputText type="text" placeholder="Nro. Reclamo" (input)="dt.filterGlobal($event.target.value, 'claimNumber')" class="w-full sm:w-64" />
+            <input pInputText type="text" placeholder="Nro. Reclamo" (input)="dt.filterGlobal($event.target.value, 'name')" class="w-full sm:w-64" />
           </p-iconfield>
         </div>
       </ng-template>
