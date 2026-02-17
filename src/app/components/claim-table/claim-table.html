@@ -46,7 +46,7 @@
           </tr>
       </ng-template>
       <ng-template #body let-claims>
-        <tr>
+        <tr class="cursor-pointer" (click)="selectedClaim(claims.id)">
           <td>{{claims.claimNumber}}</td>
           <td style="text-align: center;">{{claims.creationDate | date:'dd/MM/yyyy'}}</td>
           <td style="text-align: center;" *ngIf="claims.status === 1"><p-button label="{{claims.statusName}}" [rounded]="true" severity="warn" size="small"/></td>
@@ -62,5 +62,11 @@
       </ng-template>
     </p-table>
   </div>
+
+  <app-form-claim
+    [VisibilityForm]="VisibilityForm"
+    [idClaim]="claimId"
+    (visibleChange)="hideForm()"
+  />
 
 

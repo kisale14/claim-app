@@ -10,6 +10,7 @@ import { ServicesClaim } from '../../services/services-claim.service';
 import { Observable } from 'rxjs';
 import { Claim } from '../../../model/claim';
 import { ButtonModule } from 'primeng/button';
+import { FormClaim } from '../form-claim/form-claim';
 
 @Component({
   selector: 'app-claim-table',
@@ -22,13 +23,16 @@ import { ButtonModule } from 'primeng/button';
     InputIconModule,
     InputTextModule,
     ButtonModule,
+    FormClaim,
   ],
   templateUrl: './claim-table.html',
   styleUrl: './claim-table.css',
 })
 export class ClaimTable {
   claim$: Observable<Claim[]>;
-  claims: Claim[] = [];
+  claimId: number = 0;
+  VisibilityForm: boolean = false;
+
   @ViewChild('dt') dt!: Table;
 
   constructor(private servicesClaim: ServicesClaim) {
@@ -36,9 +40,19 @@ export class ClaimTable {
   }
 
   ngOnInit() {
-    this.claim$.subscribe((claims) => {
-      this.claims = claims;
-      console.log('Datos recibidos en el componente:', claims);
-    });
+    this.claim$.subscribe();
+  }
+
+  showForm() {
+    this.VisibilityForm = true;
+  }
+
+  hideForm() {
+    this.VisibilityForm = false;
+  }
+
+  selectedClaim(idClaim: number) {
+    this.claimId = idClaim;
+    this.showForm();
   }
 }

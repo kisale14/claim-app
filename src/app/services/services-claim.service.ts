@@ -108,6 +108,17 @@ export class ServicesClaim {
     console.log('✅ Reclamo guardado y métricas actualizadas reactivamente');
   }
 
+  getClaimById(id: number): Observable<Claim | undefined> {
+    // Si los claims ya están cargados, buscamos directamente en el BehaviorSubject
+    if (this.claimsSubject.value.length > 0) {
+      const claim = this.claimsSubject.value.find((c) => c.id === id);
+      return of(claim);
+    }
+
+    // Si no hay claims cargados, primero los cargamos y luego buscamos
+    return this.getClaims().pipe(map((claims) => claims.find((c) => c.id === id)));
+  }
+
   private loadClaims(): void {
     this.http
       .get<Claim[]>(this.dataClaimUrl)
