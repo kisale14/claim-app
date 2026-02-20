@@ -7,7 +7,8 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import { RippleModule } from 'primeng/ripple';
 import { FormsModule } from '@angular/forms';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { ThemeService } from '../../services/theme-service';
+import { CardModule } from 'primeng/card';
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   selector: 'app-sidebard',
@@ -19,6 +20,7 @@ import { ThemeService } from '../../services/theme-service';
     CommonModule,
     ToggleSwitchModule,
     FormsModule,
+    CardModule,
   ],
   templateUrl: './sidebard.html',
   styleUrl: './sidebard.css',
@@ -27,10 +29,9 @@ export class Sidebard {
   items: MegaMenuItem[] | undefined;
   checked: boolean = false;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(public layoutService : LayoutService) {}
 
   ngOnInit() {
-    this.checked = this.themeService.isDarkMode();
     this.items = [
       {
         label: 'Gestor de Reclamos',
@@ -39,9 +40,9 @@ export class Sidebard {
     ];
   }
 
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
-    // Actualizar el estado del switch después de cambiar el tema
-    this.checked = this.themeService.isDarkMode();
+  isCollapsed = false;
+
+  toggleSidebar() {
+    this.layoutService.toggleMenu();
   }
 }

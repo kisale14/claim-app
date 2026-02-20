@@ -1,3 +1,15 @@
-<app-sidebard/>
-<app-cards/>
-<app-claim-table/>
+<div class="flex h-screen overflow-hidden">
+  <!-- El sidebar ahora no tiene una clase fija 'w-64', sino que se la aplicamos dinámicamente -->
+  <app-sidebard
+    class="flex-shrink-0 transition-all duration-300 ease-in-out"
+    [class.w-64]="!layoutService.menuCollapsed()"
+    [class.w-20]="layoutService.menuCollapsed()"
+  />
+
+  <main class="flex-1 overflow-auto p-6 bg-gray-50 transition-all duration-300 ease-in-out">
+    <div class="space-y-6">
+      <app-cards/>
+      <app-claim-table/>
+    </div>
+  </main>
+</div>

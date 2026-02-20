@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Sidebard } from '../../components/sidebard/sidebard';
 import { Cards } from '../../components/cards/cards';
 import { ClaimTable } from '../../components/claim-table/claim-table';
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +10,6 @@ import { ClaimTable } from '../../components/claim-table/claim-table';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {}
+export class Dashboard {
+  constructor(public layoutService : LayoutService) {}
+}
