@@ -1,0 +1,152 @@
+<p-dialog
+  [modal]="true"
+  [closable]="false"
+  [visible]="VisibilityFile"
+  (onHide)="closeForm()"
+  [style]="{width: '700px'}"
+  [styleClass]="'p-dialog-header-sm rounded-2xl'"
+  appendTo="body"
+>
+  <!-- Header con gradiente -->
+  <ng-template pTemplate="header">
+    <div class="w-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-5 rounded-t-2xl">
+      <div class="flex items-center gap-4">
+        <div class="bg-white/20 rounded-xl p-3">
+          <i class="pi pi-file-edit text-white text-2xl"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white m-0">Adjuntar Documentos</h2>
+          <p class="text-sm text-orange-100 m-0 mt-1">Selecciona los archivos para completar la documentación</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Contenido del modal -->
+  <div class="p-6">
+    <p-fileupload
+      #fileUpload
+      name="documentos[]"
+      [multiple]="true"
+      accept="image/*,.pdf"
+      maxFileSize="5000000"
+      (onSelect)="onFileSelect($event)"
+      (onRemove)="removeFile($event.file)"
+      [auto]="false"
+      [showUploadButton]="false"
+      [showCancelButton]="false"
+    >
+      <!-- Template personalizado para mejor visualización -->
+      <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles">
+        <div class="flex flex-col gap-6">
+
+          <!-- Área de drop personalizada - SOLO VISIBLE cuando NO hay archivos pendientes -->
+          <div *ngIf="!files || files.length === 0"
+               class="border-2 border-dashed border-orange-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-orange-50/30"
+               (click)="fileUpload.choose()"
+               (drop)="onFileDrop($event)"
+               (dragover)="$event.preventDefault()"
+          >
+            <i class="pi pi-cloud-upload text-5xl text-orange-300 mb-3"></i>
+            <p class="text-slate-600 font-medium">Arrastra tus archivos aquí</p>
+            <p class="text-sm text-slate-400 mt-1">o haz clic para seleccionarlos</p>
+            <p class="text-xs text-slate-400 mt-2">Formatos permitidos: JPG, PNG, PDF (Máx. 5MB)</p>
+          </div>
+
+          <!-- Lista de archivos pendientes -->
+          <div *ngIf="files?.length > 0" class="space-y-3">
+            <h4 class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <i class="pi pi-clock text-orange-500"></i>
+              Archivos pendientes ({{ files.length }})
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div *ngFor="let file of files; let i = index"
+                   class="bg-white border border-slate-200 rounded-lg p-3 flex items-start gap-3 hover:shadow-md transition-shadow">
+                <!-- Preview del archivo -->
+                <div class="w-16 h-16 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  <img *ngIf="isImage(file)" [src]="file.objectURL" class="w-full h-full object-cover">
+                  <i *ngIf="!isImage(file)" class="pi pi-file-pdf text-3xl text-red-400"></i>
+                </div>
+
+                <!-- Detalles del archivo -->
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-slate-700 truncate">{{ file.name }}</p>
+                  <p class="text-xs text-slate-400">{{ (file.size / 1024).toFixed(1) }} KB</p>
+                  <p-badge value="Pendiente" severity="warn" class="mt-1"></p-badge>
+                </div>
+
+                <!-- Botón eliminar -->
+                <button *ngIf="files?.length > 0" class="text-slate-400 hover:text-red-500 transition-colors"
+                        (click)="removeFile(file)">
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de archivos completados -->
+          <div *ngIf="uploadedFiles?.length > 0" class="space-y-3">
+            <h4 class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <i class="pi pi-check-circle text-green-500"></i>
+              Archivos completados ({{ uploadedFiles.length }})
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div *ngFor="let file of uploadedFiles; let i = index"
+                   class="bg-green-50 border border-green-200 rounded-lg p-3 flex items-start gap-3">
+                <div class="w-16 h-16 bg-white rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  <img *ngIf="isImage(file)" [src]="file.objectURL" class="w-full h-full object-cover">
+                  <i *ngIf="!isImage(file)" class="pi pi-file-pdf text-3xl text-green-400"></i>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-slate-700 truncate">{{ file.name }}</p>
+                  <p class="text-xs text-slate-400">{{ (file.size / 1024).toFixed(1) }} KB</p>
+                  <p-badge value="Completado" severity="success" class="mt-1"></p-badge>
+                </div>
+
+                <button class="text-slate-400 hover:text-red-500 transition-colors"
+                        (click)="removeUploadedFile(file)">
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje cuando no hay archivos pendientes pero hay completados -->
+          <div *ngIf="(!files || files.length === 0) && uploadedFiles?.length > 0"
+               class="text-center py-4 text-slate-400 border border-slate-100 rounded-lg">
+            <i class="pi pi-check-circle text-3xl mb-2 text-green-300"></i>
+            <p>No hay archivos pendientes</p>
+          </div>
+
+          <!-- Mensaje cuando no hay archivos en absoluto -->
+          <div *ngIf="(!files || files.length === 0) && (!uploadedFiles || uploadedFiles.length === 0)"
+               class="text-center py-8 text-slate-400">
+            <i class="pi pi-images text-4xl mb-2 opacity-30"></i>
+            <p>No hay archivos seleccionados</p>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-fileupload>
+  </div>
+
+  <!-- Footer con botones -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 px-6 pb-6 pt-2 border-t border-slate-100">
+      <button pButton
+              severity="secondary"
+              (click)="closeForm()"
+              class="p-button-outlined">
+        <i class="pi pi-times" pButtonIcon></i>
+        <span pButtonLabel>Cancelar</span>
+      </button>
+      <button pButton
+              severity="success"
+              (click)="uploadFiles()">
+        <i class="pi pi-check" pButtonIcon></i>
+        <span pButtonLabel>Adjuntar archivos</span>
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
