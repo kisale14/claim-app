@@ -6,12 +6,13 @@
   class="rounded-2xl overflow-hidden"
   [styleClass]="'p-dialog-header-sm'"
   appendTo="body"
-  [style]="{width: '600px'}"
+  [style]="{width: '1200px'}"
   >
 
   <!-- Header personalizado con título llamativo -->
-  <ng-template pTemplate="header">
-    <div class="w-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-5 -mt-2 -mx-2 rounded-t-2xl">
+<ng-template pTemplate="header">
+  <div class="w-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-5 -mt-2 -mx-2 rounded-t-2xl">
+    <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="bg-white/20 rounded-full p-3">
           <i class="pi pi-file-edit text-white text-xl"></i>
@@ -22,82 +23,544 @@
           <p *ngIf="!numberClaim" class="text-sm text-orange-100 m-0 mt-1">Completa los datos para registrar tu reclamo</p>
         </div>
       </div>
+
+      <!-- Icono de X para cerrar -->
+      <button
+        class="bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all cursor-pointer border-none outline-none"
+        (click)="closeForm()">
+        <i class="pi pi-times text-white text-xl font-bold"></i>
+      </button>
     </div>
-  </ng-template>
+  </div>
+</ng-template>
 
   <!-- Contenido del formulario -->
   <form  [formGroup]="claimForm" >
     <div class="px-2 py-4">
     <!-- Campo Status -->
     <div *ngIf="numberClaim" class="mb-5">
-  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-    <i class="pi pi-check-square mr-2 text-orange-500"></i>
-    Status del Reclamo
-  </label>
-
-  <div class="flex gap-3">
-        <!-- Botón de status (se mantiene igual) -->
-    <div class="relative flex-1">
-      <p-button
-        *ngIf="selectedClaim?.status === 1"
-        label="{{selectedClaim?.statusName}}"
-        [rounded]="true"
-        severity="warn"
-        styleClass="h-[46px] pl-10 justify-start border-0"
-      />
-      <p-button
-        *ngIf="selectedClaim?.status === 2"
-        label="{{selectedClaim?.statusName}}"
-        [rounded]="true"
-        severity="info"
-        styleClass="h-[46px] pl-10 justify-start border-0"
-      />
-      <p-button
-        *ngIf="selectedClaim?.status === 3"
-        label="{{selectedClaim?.statusName}}"
-        [rounded]="true"
-        severity="danger"
-        styleClass="h-[46px] pl-10 justify-start border-0"
-      />
-    </div>
-    <!-- Select con opciones Aprobar/Rechazar -->
-    <div class="relative w-full" *ngIf="selectedClaim?.status === 1">
-      <i class="pi pi-chart-scatter absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 z-10 text-sm"></i>
-      <select
-      (change)="onActionSelected($event)"
-        class="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl focus:border-orange-300 dark:focus:border-orange-500 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 appearance-none text-sm"
-        style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239ca3af%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22></polyline></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2rem;"
-      >
-        <option value="" disabled selected class="bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500">Seleccione una acción</option>
-        <option value="2" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">✅ Aprobar</option>
-        <option value="3" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">❌ Rechazar</option>
-      </select>
-    </div>
-  </div>
-
-  <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Seleccione acción para el reclamo</p>
-</div>
-    <!-- Campo Cliente -->
-    <div class="mb-5">
-      <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
-        <i class="pi pi-user mr-2 text-orange-500"></i>
-        Nombre del cliente
+      <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        <i class="pi pi-check-square mr-2 text-orange-500"></i>
+        Status del Reclamo
       </label>
-      <div class="relative">
-        <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input
-          pInputText
-          id="username"
-          formControlName="name"
-          class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
-          autocomplete="off"
-          placeholder="ej. juan.perez"
-        />
+
+      <div class="flex gap-3">
+            <!-- Botón de status (se mantiene igual) -->
+        <div class="relative flex-1">
+          <p-button
+            *ngIf="selectedClaim?.status === 1"
+            label="{{selectedClaim?.statusName}}"
+            [rounded]="true"
+            severity="warn"
+            styleClass="h-[46px] pl-10 justify-start border-0"
+          />
+          <p-button
+            *ngIf="selectedClaim?.status === 2"
+            label="{{selectedClaim?.statusName}}"
+            [rounded]="true"
+            severity="info"
+            styleClass="h-[46px] pl-10 justify-start border-0"
+          />
+          <p-button
+            *ngIf="selectedClaim?.status === 3"
+            label="{{selectedClaim?.statusName}}"
+            [rounded]="true"
+            severity="danger"
+            styleClass="h-[46px] pl-10 justify-start border-0"
+          />
+        </div>
+        <!-- Select con opciones Aprobar/Rechazar -->
+        <div class="relative w-full" *ngIf="selectedClaim?.status === 1">
+          <i class="pi pi-chart-scatter absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 z-10 text-sm"></i>
+          <select
+          (change)="onActionSelected($event)"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl focus:border-orange-300 dark:focus:border-orange-500 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 appearance-none text-sm"
+            style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239ca3af%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22></polyline></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2rem;"
+          >
+            <option value="" disabled selected class="bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500">Seleccione una acción</option>
+            <option value="2" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">✅ Aprobar</option>
+            <option value="3" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">❌ Rechazar</option>
+          </select>
+        </div>
       </div>
-      <p class="text-xs text-slate-400 mt-1">Ingresar nombre del cliente</p>
+
+     <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Seleccione acción para el reclamo</p>
+    </div>
+    <div class="md:col-span-3 bg-[#1a1a1a] text-white p-4 rounded-xl mb-2">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold">Datos del Cliente</span>
+      </div>
+    </div>
+    <!-- Primera Sección Ente - Nro Reclamo - Fecha -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <!-- Input 1: Nombre del cliente -->
+      <div>
+        <label for="username" class="block text-md font-bold text-slate-700 mb-2">
+          Ente:
+        </label>
+        <div class="relative">
+          <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            pInputText
+            formControlName="ente"
+            id="username"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Ente del cliente</p>
+      </div>
+
+      <!-- Input 2: Correo electrónico -->
+      <div>
+        <label for="email" class="block text-md font-bold text-blue-500 text-slate-700 mb-2">
+          Número de Reclamo:
+        </label>
+        <div class="relative">
+          <i class="pi pi-sort-numeric-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            disabled
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+            placeholder="Automático al guardar"
+          />
+        </div>
+      </div>
+
+      <!-- Input 3: Teléfono -->
+      <div>
+        <label for="phone" class="block text-md font-bold text-slate-700 mb-2">
+          Fecha:
+        </label>
+        <div class="relative">
+          <i class="pi pi-calendar-plus absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <p-datepicker
+            locale="es"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [showOnFocus]="false"
+            inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            styleClass="w-full"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Fecha de Incidencia</p>
+      </div>
+    </div>
+    <!-- Segunda Sección Nombre - Tipo Cliente -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <div class="md:col-span-2">
+        <label for="descripcion" class="block text-md font-bold text-slate-700 mb-2">
+          Nombres / Razón Social:
+        </label>
+        <div class="relative">
+          <i class="pi pi-user-edit absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="name"
+            pInputText
+            id="descripcion"
+            type="text"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar nombres o razón social del cliente</p>
+      </div>
+      <div class="md:col-span-1">
+        <label for="monto" class="block text-md font-bold text-slate-700 mb-2">
+          Tipo Cliente:
+        </label>
+        <div class="relative">
+          <i class="pi pi-building absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <p-select
+            formControlName="typeClient"
+            [options]="cities" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="N/A"               styleClass="w-full"
+            inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl transition-all"
+            panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"/>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Tipo de Cliente</p>
+      </div>
+    </div>
+    <!-- Tercera Sección Cédula - Tlf - Tlf -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <!-- Input 1: Nombre del cliente -->
+      <div>
+        <label for="username" class="block text-md font-bold text-slate-700 mb-2">
+          Cédula / RIF:
+        </label>
+        <div class="relative">
+          <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="identification"
+            pInputText
+            id="username"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Cédula o RIF del cliente</p>
+      </div>
+      <div>
+        <label for="email" class="block text-md font-bold text-slate-700 mb-2">
+          Tlf Local
+        </label>
+        <div class="relative">
+          <i class="pi pi-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="phone"
+            pInputText
+            id="email"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Teléfono Local del cliente</p>
+      </div>
+      <div>
+        <label for="phone" class="block text-md font-bold text-slate-700 mb-2">
+          Tlf Celular:
+        </label>
+        <div class="relative">
+          <i class="pi pi-mobile absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            pInputText
+            id="email"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Teléfono Celular del cliente</p>
+      </div>
+    </div>
+    <!-- Cuarta Sección email - direccion -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label for="cedula" class="block text-md font-bold text-slate-700 mb-2">
+          Email:
+        </label>
+        <div class="relative">
+          <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="email"
+            pInputText
+            id="cedula"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Email del cliente</p>
+      </div>
+
+      <div>
+        <label for="telefono" class="block text-md font-bold text-slate-700 mb-2">
+          Dirección:
+        </label>
+        <div class="relative">
+          <i class="pi pi-map-marker absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="direction"
+            pInputText
+            id="telefono"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar dirección del cliente</p>
+      </div>
+    </div>
+    <!-- Sección de autorizado -->
+    <div class="md:col-span-3 bg-[#1a1a1a] text-white p-4 rounded-xl mb-2">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold">Autorizado (Opcional)</span>
+      </div>
+    </div>
+    <!-- Quinta Sección Nombre Autorizador - Cédula Autorizador -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label for="cedula" class="block text-md font-bold text-slate-700 mb-2">
+          Nombre:
+        </label>
+        <div class="relative">
+          <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            pInputText
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Nombre Autorizador</p>
+      </div>
+
+      <div>
+        <label for="telefono" class="block text-md font-bold text-slate-700 mb-2">
+          Cédula:
+        </label>
+        <div class="relative">
+          <i class="pi pi-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            pInputText
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar cédula Autorizador</p>
+      </div>
+    </div>
+    <!-- Detaller Operativo-->
+    <div class="md:col-span-3 bg-[#1a1a1a] text-white p-4 rounded-xl mb-2">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold">Detalle Operativo</span>
+      </div>
+    </div>
+    <!-- Sexta Sección Agencia - Canal - Detalle -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <!-- Columna izquierda -->
+      <div>
+        <!-- Select arriba -->
+        <div class="mb-4">
+          <label for="tipo-autorizador" class="block text-md font-bold text-slate-700 mb-2">
+            Agencia / Canal:
+          </label>
+          <div class="relative">
+            <p-select
+              formControlName="agencyChannel"
+              [options]="tiposAutorizador"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              placeholder="Seleccionar tipo"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+              panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"
+            />
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Seleccionar vía del Reclamo</p>
+        </div>
+
+        <!-- Textarea debajo -->
+        <div>
+          <label for="descripcion-autorizador" class="block text-md font-bold text-slate-700 mb-2">
+            Descripción:
+          </label>
+          <div class="relative">
+            <i class="pi pi-file-edit absolute left-3 top-5 text-slate-400 text-sm"></i>
+            <textarea
+              formControlName="description"
+              pInputTextarea
+              id="descripcion-autorizador"
+              rows="4"
+              class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all resize-none"
+            ></textarea>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Ingresar descripción o detalles</p>
+        </div>
+      </div>
+    </div>
+    <!-- Datos Transacción-->
+    <div class="md:col-span-3 bg-[#1a1a1a] text-white p-4 rounded-xl mb-2">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold">Datos Transacción</span>
+      </div>
+    </div>
+    <!-- Séptima Sección Cuenta - Tarjeta -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label for="cedula" class="block text-md font-bold text-slate-700 mb-2">
+          Número Cuenta:
+        </label>
+        <div class="relative">
+          <i class="pi pi-address-book absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="numberCount"
+            pInputText
+            id="nombreA"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar número de cuenta del cliente</p>
+      </div>
+
+      <div>
+        <label for="telefono" class="block text-md font-bold text-slate-700 mb-2">
+          Número de Tarjeta:
+        </label>
+        <div class="relative">
+          <i class="pi pi-credit-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="numberCard"
+            pInputText
+            id="cedulaA"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar número de tarjeta del cliente</p>
+      </div>
+    </div>
+    <!-- Octava Sección Fecha - Monto - Instrumento -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <!-- Input 1: Nombre del cliente -->
+      <div>
+        <label for="username" class="block text-md font-bold text-slate-700 mb-2">
+          Fecha TX:
+        </label>
+        <div class="relative">
+          <i class="pi pi-calendar-plus absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <p-datepicker
+            formControlName="dateTransaction"
+            locale="es"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [showOnFocus]="false"
+            inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            styleClass="w-full"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Cédula o RIF del cliente</p>
+      </div>
+      <div>
+        <label for="email" class="block text-md font-bold text-slate-700 mb-2">
+          Monto
+        </label>
+        <div class="relative">
+          <i class="pi pi-money-bill absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="mountTr"
+            pInputText
+            id="email"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+            (input)="formatMountFromRight($event)"
+            (keydown)="handleMountKeyDown($event)"
+            (blur)="validateMountOnBlur()"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Teléfono Local del cliente</p>
+      </div>
+      <div>
+        <label for="phone" class="block text-md font-bold text-slate-700 mb-2">
+          Instrumento:
+        </label>
+        <div class="relative">
+          <i class="pi pi-building-columns absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <p-select
+              formControlName="instrumentTr"
+              [options]="tiposInstrumento"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              placeholder="Seleccionar tipo"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+              panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"
+            />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Teléfono Celular del cliente</p>
+      </div>
+    </div>
+    <!-- Novena Sección Tipo Reclamo - Canal -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label for="cedula" class="block text-md font-bold text-slate-700 mb-2">
+          Tipo Reclamo:
+        </label>
+        <div class="relative">
+          <i class="pi pi-address-book absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+           <p-select
+              formControlName="typeClaim"
+              [options]="tiposReclamos"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              placeholder="Seleccionar tipo"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+              panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"
+            />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar número de cuenta del cliente</p>
+      </div>
+
+      <div>
+        <label for="telefono" class="block text-md font-bold text-slate-700 mb-2">
+          Canal:
+        </label>
+        <div class="relative">
+          <i class="pi pi-credit-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+           <p-select
+              formControlName="channelTr"
+              [options]="tiposCanal"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              placeholder="Seleccionar tipo"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+              panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"
+            />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar número de tarjeta del cliente</p>
+      </div>
+    </div>
+    <!-- Décima Sección Motivo -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <!-- Columna izquierda -->
+      <div class="md:col-span-3">
+        <!-- Textarea debajo -->
+        <div>
+          <label for="descripcion-autorizador" class="block text-md font-bold text-slate-700 mb-2">
+            Motivo:
+          </label>
+          <div class="relative">
+            <i class="pi pi-file-edit absolute left-3 top-5 text-slate-400 text-sm"></i>
+            <p-select
+              formControlName="reasonTr"
+              [options]="tiposMotivo"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              placeholder="Seleccionar tipo"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+              panelStyleClass="mt-1 shadow-lg border-0 rounded-xl"
+            />
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Ingresar descripción o detalles</p>
+        </div>
+      </div>
+    </div>
+    <!-- Undecima Sección referencia Transacción -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <div>
+        <label for="username" class="block text-md font-bold text-slate-700 mb-2">
+          Referencia de la Transaccion:
+        </label>
+        <div class="relative">
+          <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input
+            formControlName="referenceTr"
+            pInputText
+            id="username"
+            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:border-orange-300 focus:ring-2 focus:ring-orange-100 outline-none transition-all"
+            autocomplete="off"
+          />
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Ingresar Referencia de la Transaccion del cliente</p>
+      </div>
+    </div>
+    <!-- Datos Transacción-->
+    <div class="md:col-span-3 bg-[#1a1a1a] text-white p-4 rounded-xl mb-2 cursor-pointer hover:bg-[#2a2a2a]" (click)="submitForm()">
+      <div class="flex items-center justify-center gap-2">
+        <span class="font-semibold">Registrar y generar PDF</span>
+      </div>
     </div>
     <!-- Campo Cédula -->
-    <div class="mb-5">
+    <!-- <div class="mb-5">
       <label for="cedula" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-id-card mr-2 text-orange-500"></i>
         Cédula o RIF
@@ -115,17 +578,17 @@
         />
       </div>
       <p class="text-xs text-slate-400 mt-1">Ingresar cédula o RIF del cliente</p>
-    </div>
+    </div> -->
     <!-- Campo Telefono -->
-<div class="mb-5">
+<!-- <div class="mb-5">
   <label for="telefono" class="block text-sm font-semibold text-slate-700 mb-2">
     <i class="pi pi-phone mr-2 text-orange-500"></i>
     Teléfono
   </label>
 
-  <div class="relative flex">
+  <div class="relative flex"> -->
     <!-- Select con el mismo estilo que el input -->
-    <select
+    <!-- <select
       #phoneSelect
       (change)="onPhoneCodeChange(phoneSelect.value)"
       class="w-30 pl-3 pr-8 py-3 border border-r-0 border-slate-200 dark:border-slate-600 rounded-l-xl focus:border-orange-300 dark:focus:border-orange-600 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
@@ -136,10 +599,10 @@
       <option value="+58424" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58424</option>
       <option value="+58416" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58416</option>
       <option value="+58426" class="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800">+58426</option>
-    </select>
+    </select> -->
 
     <!-- Input con borde izquierdo redondeado (sin borde izquierdo) -->
-    <div class="relative flex-1">
+    <!-- <div class="relative flex-1">
       <i class="pi pi-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
       <input
         pInputText
@@ -154,9 +617,9 @@
   </div>
 
   <p class="text-xs text-slate-400 mt-1">Ingresar número de teléfono del cliente</p>
-</div>
+</div> -->
     <!-- Campo fecha -->
-    <div class="mb-5">
+    <!-- <div class="mb-5">
       <label for="fecha" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-calendar mr-2 text-orange-500"></i>
         Fecha Incidencia
@@ -174,9 +637,9 @@
         </p-datepicker>
       </div>
       <p class="text-xs text-slate-400 mt-1">Ingresar fecha del incidente</p>
-    </div>
+    </div> -->
     <!-- Campo Monto -->
-    <div class="mb-5">
+    <!-- <div class="mb-5">
       <label for="monto" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-money-bill mr-2 text-orange-500"></i>
         Monto Incidencia
@@ -196,20 +659,20 @@
         />
       </div>
       <p class="text-xs text-slate-400 mt-1">Ingresar monto del incidente</p>
-    </div>
+    </div> -->
 
     <!-- Línea divisoria decorativa -->
-    <div class="relative my-6">
+    <!-- <div class="relative my-6">
       <div class="absolute inset-0 flex items-center">
         <div class="w-full border-t border-slate-200"></div>
       </div>
       <div class="relative flex justify-center">
         <span class="bg-white px-4 text-xs text-slate-400">información del reclamo</span>
       </div>
-    </div>
+    </div> -->
 
     <!-- Campo adicional para reclamo -->
-    <div class="mb-6">
+    <!-- <div class="mb-6">
       <label for="reclamo" class="block text-sm font-semibold text-slate-700 mb-2">
         <i class="pi pi-comment mr-2 text-orange-500"></i>
         Detalle del Reclamo
@@ -222,12 +685,12 @@
         placeholder="Describe brevemente tu reclamo..."
       ></textarea>
       <p class="text-xs text-slate-400 mt-1">Máximo 500 caracteres</p>
-    </div>
+    </div> -->
     </div>
   </form>
 
   <!-- Footer con botones mejorados -->
-  <ng-template pTemplate="footer">
+  <!-- <ng-template pTemplate="footer">
     <div class="flex justify-end gap-3 px-2 pb-4">
     <button pButton severity="danger" (click)="closeForm()">
       <i class="pi pi-times" pButtonIcon></i>
@@ -238,7 +701,7 @@
       <span pButtonLabel>Crear</span>
     </button>
     </div>
-  </ng-template>
+  </ng-template> -->
 </p-dialog>
 
 <p-toast [preventOpenDuplicates]="true"/>

@@ -7,7 +7,7 @@
     <button
       (click)="toggleSidebar()"
       class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 bg-gray-800 hover:bg-gray-700 text-white rounded-full p-1.5 shadow-lg border border-gray-700 z-20 transition-all hover:scale-110"
-      [class.rotate-180]="layoutService.menuCollapsed()"
+      [class.rotate-180]="!layoutService.menuCollapsed()"
     >
       <i class="pi pi-chevron-right text-sm"></i>
     </button>
@@ -75,16 +75,6 @@
             }
           </a>
 
-          <!-- Perfil -->
-          <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer whitespace-nowrap"
-             [class.justify-center]="layoutService.menuCollapsed()"
-             [title]="layoutService.menuCollapsed() ? 'Perfil' : ''">
-            <i class="pi pi-user text-lg flex-shrink-0"></i>
-            @if (!layoutService.menuCollapsed()) {
-              <span class="flex-1 text-sm">Perfil</span>
-            }
-          </a>
-
           <!-- Configuración -->
           <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer whitespace-nowrap"
              [class.justify-center]="layoutService.menuCollapsed()"
@@ -96,32 +86,6 @@
           </a>
         </nav>
       </div>
-
-      <!-- IMAGEN CENTRAL - Solo visible en expandido -->
-      @if (!layoutService.menuCollapsed()) {
-        <div class="flex-1 flex items-center justify-center px-4 py-2 min-h-0">
-          <div class="relative group w-full">
-            <div class="relative bg-gray-800/30 rounded-2xl p-4 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-all">
-              <!-- <img
-                src="assets/dashboard-illustration.svg"
-                alt="Dashboard Illustration"
-                class="w-full h-auto max-h-24 object-contain mx-auto transform group-hover:scale-105 transition-transform duration-300"
-                onerror="this.src='https://via.placeholder.com/200x100/2d3748/ffffff?text=Analytics'"
-              > -->
-              <div class="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs px-2 py-1 rounded-full shadow-lg">
-                Pro
-              </div>
-            </div>
-            <div class="text-center mt-2">
-              <p class="text-xs font-medium text-white">Analíticas</p>
-              <div class="flex items-center justify-center gap-1 mt-0.5">
-                <span class="w-1 h-1 bg-green-500 rounded-full"></span>
-                <p class="text-xs text-gray-500">En vivo</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
 
       <!-- Menú inferior -->
       <div class="px-3 py-4 mt-auto flex-shrink-0" [class.px-2]="layoutService.menuCollapsed()">

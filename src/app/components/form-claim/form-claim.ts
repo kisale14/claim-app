@@ -11,6 +11,13 @@ import { Claim } from '../../../model/claim';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { InputText } from "primeng/inputtext";
+import { PdfGeneratorService } from '../../services/pdf-generator-service.service';
+import { claimModel } from '../../../model/claimModel';
+
+interface City {
+  name: string;
+  code: string;
+}
 
 @Component({
   selector: 'app-form-claim',
@@ -34,30 +41,115 @@ export class FormClaim {
   @Input() idClaim: number = 0;
   @Output() visibleChange = new EventEmitter<boolean>();
 
+  cities!: City[];
+  selectedCity: City | undefined;
+
   numberClaim: string = '';
-  selectedClaim: Claim | null = null;
+  selectedClaim: claimModel | null = null;
   selectedPhoneCode: string = '+58412';
+
+  selectedTipoAutorizador: any;
+  selectedEstadoAutorizador: any;
 
   private messageService = inject(MessageService);
 
   claimForm!: FormGroup;
 
+  logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...';
+
   date: Date | undefined;
   visible: boolean = false;
+  tiposAutorizador!: { nombre: string; codigo: string }[];
+  tiposInstrumento!: { nombre: string; codigo: string }[];
+  tiposReclamos!: { nombre: string; codigo: string }[];
+  tiposCanal!: { nombre: string; codigo: string }[];
+  tiposMotivo!: { nombre: string; codigo: string }[];
 
   constructor(
     private fb: FormBuilder,
     private servicesClaim: ServicesClaim,
+    private pdfService: PdfGeneratorService,
   ) {}
 
   ngOnInit() {
     this.initForm();
+    this.cities = [
+      { name: 'Narutal (V)', code: 'Narutal (V)' },
+      { name: 'Extranjero (E)', code: 'Extranjero (E)' },
+      { name: 'Jurídico (J)', code: 'Jurídico (J)' },
+      { name: 'Gubernamental (G)', code: 'Gubernamental (G)' },
+      { name: 'Pasaporte (P)', code: 'Pasaporte (P)' },
+    ];
+    this.tiposAutorizador = [
+      { nombre: 'Sede Central', codigo: 'Sede Central' },
+      { nombre: 'Lido', codigo: 'Lido' },
+      { nombre: 'Recreo', codigo: 'Recreo' },
+      { nombre: 'Las Delicias', codigo: 'Las Delicias' },
+      { nombre: 'Valle Frio', codigo: 'Valle Frio' },
+      { nombre: 'Barquisimeto', codigo: 'Barquisimeto' },
+      { nombre: 'Porlamar', codigo: 'Porlamar' },
+      { nombre: 'El Viñedo', codigo: 'El Viñedo' },
+      { nombre: 'Oficina Central', codigo: 'Oficina Central' },
+    ];
+    this.tiposInstrumento = [
+      { nombre: 'Tarjeta de Credito', codigo: 'Tarjeta de Credito' },
+      { nombre: 'Tarjeta Debito', codigo: 'Tarjeta Debito' },
+      { nombre: 'Tarjeta Prepagada', codigo: 'Tarjeta Prepagada' },
+      { nombre: 'Caja de Seguridad', codigo: 'Caja de Seguridad' },
+      { nombre: 'Bonos de la Deuda Publica', codigo: 'Bonos de la Deuda Publica' },
+      { nombre: 'Operaciones Cambiarias', codigo: 'Operaciones Cambiarias' },
+      { nombre: 'Depositos a Plazo Fijo', codigo: 'Depositos a Plazo Fijo' },
+      { nombre: 'Cuenta Corriente', codigo: 'Cuenta Corriente' },
+      { nombre: 'Cuenta Ahorro', codigo: 'Cuenta Ahorro' },
+      { nombre: 'Fideicomiso', codigo: 'Fideicomiso' },
+      { nombre: 'Microcredito', codigo: 'Microcredito' },
+      { nombre: 'Atencion al Cliente', codigo: 'Atencion al Cliente' },
+    ];
+    this.tiposReclamos = [
+      { nombre: 'Presunto Pago Indebido', codigo: 'Presunto Pago Indebido' },
+      { nombre: 'Monto Cargado y No dispensado en ATM', codigo: 'Monto Cargado y No dispensado en ATM' },
+      { nombre: 'Debitos no Reconocidos', codigo: 'Debitos no Reconocidos' },
+      { nombre: 'Consumos o Montos no reconocidos', codigo: 'Consumos o Montos no reconocidos' },
+      { nombre: 'Presunto Robo o Hurto', codigo: 'Presunto Robo o Hurto' },
+      { nombre: 'Tasas, Tarifas y Comisiones', codigo: 'Tasas, Tarifas y Comisiones' },
+      { nombre: 'Atencial indebida al Publico', codigo: 'Atencial indebida al Publico' },
+      { nombre: 'Cuenta Corriente', codigo: 'Cuenta Corriente' },
+      { nombre: 'Transferencia no Acreditada', codigo: 'Transferencia no Acreditada' },
+      { nombre: 'Pago Movil Fallido', codigo: 'Pago Movil Fallido' },
+    ];
+    this.tiposCanal = [
+      { nombre: 'ATM', codigo: 'ATM' },
+      { nombre: 'POS', codigo: 'POS' },
+      { nombre: 'Internet Banking', codigo: 'Internet Banking' },
+      { nombre: 'IVR', codigo: 'IVR' },
+      { nombre: 'Pago Movil', codigo: 'Pago Movil' },
+      { nombre: 'Banca Movil', codigo: 'Banca Movil' },
+      { nombre: 'Oficina Y/O Agencia', codigo: 'Oficina Y/O Agencia' },
+    ];
+    this.tiposMotivo = [
+      { nombre: 'Transaccion Fallida', codigo: 'Transaccion Fallida' },
+      { nombre: 'Consumo Duplicado', codigo: 'Consumo Duplicado' },
+      { nombre: 'Consumo no Reconocido', codigo: 'Consumo no Reconocido' },
+      { nombre: 'Transferencias a otros bancos no acreditada', codigo: 'Transferencias a otros bancos no acreditada' },
+      { nombre: 'Transferencias a otros bancos no reconocida', codigo: 'Transferencias a otros bancos no reconocida' },
+      { nombre: 'Transferencias a otros bancos no duplicadas', codigo: 'Transferencias a otros bancos no duplicadas' },
+      { nombre: 'Transferencias propias no Acreditada', codigo: 'Transferencias propias no Acreditada' },
+      { nombre: 'Transferencias propias no reconocida', codigo: 'Transferencias propias no reconocida' },
+      { nombre: 'Transferencias propias duplicadas', codigo: 'Transferencias propias duplicadas' },
+      { nombre: 'Pago Movil no exitoso', codigo: 'Pago Movil no exitoso' },
+      { nombre: 'Pago Movil no acreditado', codigo: 'Pago Movil no acreditado' },
+      { nombre: 'Pago Movil duplicado', codigo: 'Pago Movil duplicado' },
+    ];
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['idClaim']) {
       this.handleIdClaimChange(changes['idClaim'].currentValue);
     }
+  }
+
+  generarPDF() {
+    this.pdfService.exportarFormatoPDFPrueba();
   }
 
   private handleIdClaimChange(newId: number) {
@@ -81,19 +173,19 @@ export class FormClaim {
     const selectedValue = event.target.value;
     const selectedText = event.target.options[event.target.selectedIndex].text;
 
-    this.servicesClaim.updateClaimStatus(this.selectedClaim!.id, parseInt(selectedValue))
+    this.servicesClaim.updateClaimStatus(this.selectedClaim!.id, parseInt(selectedValue));
 
     this.closeForm();
   }
 
-  loadDataForm(claimData: Claim) {
+  loadDataForm(claimData: claimModel) {
     this.claimForm.patchValue({
       id: claimData.id,
-      name: claimData.name,
+      name: claimData.clientName,
       identification: claimData.identification,
       phone: claimData.phone,
-      date: claimData.dateOfIncident,
-      mount: claimData.mount,
+      date: claimData.dateTransaction,
+      mount: claimData.mountTr,
     });
   }
 
@@ -104,67 +196,54 @@ export class FormClaim {
   private initForm() {
     this.claimForm = this.fb.group({
       id: [],
+      ente: ['', Validators.required],
       name: ['', Validators.required],
       identification: ['', Validators.required],
+      typeClient: ['', Validators.required],
       phone: ['', Validators.required],
-      date: [new Date(), Validators.required],
-      mount: ['0.00', Validators.required],
+      email: ['', Validators.required],
+      direction: ['', Validators.required],
+      agencyChannel: ['', Validators.required],
+      description: ['', Validators.required],
+      numberCount: ['0169', Validators.required],
+      numberCard: ['', Validators.required],
+      dateTransaction: [new Date(), Validators.required],
+      mountTr: ['0.00', Validators.required],
+      instrumentTr: ['', Validators.required],
+      typeClaim: ['', Validators.required],
+      channelTr: ['', Validators.required],
+      reasonTr: ['', Validators.required],
+      referenceTr: ['', Validators.required],
     });
   }
 
   submitForm() {
     if (this.claimForm.valid) {
-      // Obtener el valor actual del teléfono (solo números, sin guión)
-      const phoneNumber = this.claimForm.get('phone')?.value || '';
+      const formData = this.claimForm.value;
+      const mountClean = formData.mountTr.replace(/,/g, '').replace(/\./g, '');
+      formData.mountTr = mountClean;
+      const res = this.servicesClaim.formatClaimObject(formData);
 
-      // Crear el teléfono completo uniendo código + número
-      const fullPhone = this.selectedPhoneCode + phoneNumber;
-
-      // Crear una copia de los valores del formulario
-      const formValue = { ...this.claimForm.value };
-
-      // Reemplazar phone con el valor completo
-      formValue.phone = fullPhone;
-
-      // 1. El servicio hace su trabajo y devuelve resultado
-      const { claim, result } = this.servicesClaim.formatClaimObject(formValue);
-
-      // 2. Mostrar mensaje según el resultado
-      if (result.success) {
+      if (res.result.success) {
         this.messageService.add({
           severity: 'success',
-          summary: '✅ Reclamo guardado',
-          detail: `Reclamo creado correctamente`,
+          summary: 'Éxito',
+          detail: 'El reclamo ha sido guardado exitosamente.',
         });
-
-        // Resetear el formulario
-        this.claimForm.reset({
-          date: new Date(),
-          mount: '0.00',
-        });
-
-        // Resetear el código seleccionado al valor por defecto
-        this.selectedPhoneCode = '+58412';
-
+        console.log(res.claim);
         this.closeForm();
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: '❌ Error al guardar',
-          detail: result.error || 'No se pudo guardar el reclamo',
-        });
       }
     } else {
-      // Marcar campos inválidos
-      Object.keys(this.claimForm.controls).forEach((key) => {
-        this.claimForm.get(key)?.markAsTouched();
-      });
-
       this.messageService.add({
         severity: 'error',
-        summary: '❌ Formulario inválido',
-        detail: 'Por favor complete todos los campos requeridos',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos.',
       });
+      const formData = this.claimForm.value;
+      const mountClean = formData.mountTr.replace(/,/g, '').replace(/\./g, '');
+      formData.mount = mountClean;
+      console.log(formData);
+      console.log('Formulario inválido');
     }
   }
 
@@ -232,7 +311,7 @@ export class FormClaim {
 
     // Si no hay valor, mostrar "0.00"
     if (!value || value === '') {
-      this.claimForm.get('mount')?.setValue('0.00', { emitEvent: false });
+      this.claimForm.get('mountTr')?.setValue('0.00', { emitEvent: false });
       return;
     }
 
@@ -265,7 +344,7 @@ export class FormClaim {
     const formattedValue = `${integerPart}.${decimalPart}`;
 
     // Actualizar el valor en el formulario
-    this.claimForm.get('mount')?.setValue(formattedValue, { emitEvent: false });
+    this.claimForm.get('mountTr')?.setValue(formattedValue, { emitEvent: false });
 
     // Calcular y establecer la nueva posición del cursor
     setTimeout(() => {
@@ -317,7 +396,7 @@ export class FormClaim {
 
   // Función para manejar teclas especiales (backspace, delete)
   handleMountKeyDown(event: KeyboardEvent) {
-    const control = this.claimForm.get('mount');
+    const control = this.claimForm.get('mountTr');
     let value = control?.value || '0.00';
 
     // Eliminar formato para trabajar con números puros
@@ -356,7 +435,7 @@ export class FormClaim {
 
   // Validación al perder el foco (opcional)
   validateMountOnBlur() {
-    const control = this.claimForm.get('mount');
+    const control = this.claimForm.get('mountTr');
     if (control) {
       let value = control.value;
 

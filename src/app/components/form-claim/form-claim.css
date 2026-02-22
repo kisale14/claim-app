@@ -1,0 +1,27 @@
+:host ::ng-deep .p-select.p-focus .p-select-label,
+:host ::ng-deep .p-select:focus-within .p-select-label {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2px #fed7aa !important;
+  outline: none !important;
+}
+
+/* Estilo para el contenedor principal cuando tiene focus */
+:host ::ng-deep .p-select.p-focus,
+:host ::ng-deep .p-select:focus-within {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2px #fed7aa !important;
+  outline: none !important;
+}
+
+/* Asegurar que el input interno no tenga estilos conflictivos */
+:host ::ng-deep .p-select .p-select-label {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Para el dropdown button */
+:host ::ng-deep .p-select:focus-within .p-select-dropdown,
+:host ::ng-deep .p-select.p-focus .p-select-dropdown {
+  color: #f97316 !important;
+}

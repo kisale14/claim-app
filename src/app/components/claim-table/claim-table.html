@@ -2,7 +2,6 @@
     <p-table
       [value]="(claim$ | async) || []"
       [tableStyle]="{ 'min-width': '50rem' }"
-      showGridlines
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[10, 20, 30]"
@@ -25,36 +24,36 @@
   </ng-template>
       <ng-template #header>
         <tr>
-          <th style="text-align: center; background-color: #242424; color: white; border-top-left-radius: 12px;">Nro. Reclamo</th>
-          <th style="text-align: center; background-color: #242424; color: white;">Fecha (Creación)</th>
+          <th style="text-align: center; background-color: #242424; color: white; border-top-left-radius: 12px;">PDF</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Anexo</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Expediente</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Chat</th>
           <th style="text-align: center; background-color: #242424; color: white;">Status</th>
-          <th style="text-align: center; background-color: #242424; color: white;">Nombre / Razón Social</th>
-          <th style="text-align: center; background-color: #242424; color: white;">CI / RIF</th>
-          <th style="text-align: center; background-color: #242424; color: white;">Nro. Tlf</th>
-          <th style="text-align: center; background-color: #242424; color: white;">Fecha</th>
-          <th style="text-align: center; background-color: #242424; color: white;">Hora</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Nro. Reclamo</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Fecha (Bloqueo)</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Fecha (Abono)</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Fecha (Reg)</th>
+          <th style="text-align: center; background-color: #242424; color: white;">Cliente</th>
           <th style="text-align: center; background-color: #242424; color: white;">Monto</th>
-          <th style="text-align: center; background-color: #242424; color: white; border-top-right-radius: 12px;">Documentación</th>
+          <th style="text-align: center; background-color: #242424; color: white; border-top-right-radius: 12px;">Canal</th>
         </tr>
       </ng-template>
       <ng-template #body let-claims>
         <tr class="cursor-pointer">
-          <td style="text-decoration: underline;" class="text-blue-600" (click)="selectedClaim(claims.id)">{{claims.claimNumber}}</td>
-          <td style="text-align: center;">{{claims.creationDate | date:'dd/MM/yyyy'}}</td>
+          <td style="text-align: center;"><p-button (onClick)="showFile()" icon="pi pi-file-pdf" size="small" aria-label="pdf" pTooltip="Descargar pdf" tooltipPosition="top" severity="contrast"/></td>
+          <td style="text-align: center;"><p-button (onClick)="showFile()" label="Ver Anexo" size="small" aria-label="anexo" pTooltip="Ver Anexo" tooltipPosition="top"/></td>
+          <td style="text-align: center;"><i (onClick)="showFile()" class="pi pi-exclamation-triangle" style="color: rgb(224, 224, 64)" pTooltip="Listado de Faltantes" tooltipPosition="top"></i></td>
+          <td style="text-align: center;"><p-button (onClick)="showFile()" icon="pi pi-comments" severity="info" size="small" aria-label="Chat" pTooltip="Ver Chat" tooltipPosition="top"/></td>
           <td style="text-align: center;" *ngIf="claims.status === 1"><p-button label="{{claims.statusName}}" [rounded]="true" severity="warn" size="small"/></td>
           <td style="text-align: center;" *ngIf="claims.status === 2"><p-button label="{{claims.statusName}}" [rounded]="true" severity="info" size="small"/></td>
           <td style="text-align: center;" *ngIf="claims.status === 3"><p-button label="{{claims.statusName}}" [rounded]="true" severity="danger" size="small"/></td>
-          <td>{{claims.name}}</td>
-          <td style="text-align: right;">{{claims.identification}}</td>
-          <td style="text-align: right;">{{claims.phone}}</td>
-          <td style="text-align: center;">{{claims.dateOfIncident | date:'dd/MM/yyyy'}}</td>
-          <td style="text-align: center;">{{claims.dateOfIncident | date:'HH:mm' }}</td>
-          <td style="text-align: right;">{{claims.mount}}</td>
-          <td style="text-align: center;">
-            <p-button (onClick)="showFile()" icon="pi pi-file-pdf" severity="contrast" size="small" aria-label="pdf" pTooltip="Adjuntar pdf" tooltipPosition="top"/>
-            <p-button (onClick)="showFile()" icon="pi pi-file-arrow-up" severity="success" size="small" aria-label="carta"  class="ml-1" pTooltip="Adjuntar Carta explicativa" tooltipPosition="top"/>
-            <p-button (onClick)="showFile()" icon="pi pi-receipt" severity="info" size="small" aria-label="carta"  class="ml-1" pTooltip="Adjuntar Comprobante" tooltipPosition="top"/>
-          </td>
+          <td style="text-decoration: underline;" class="text-blue-600" (click)="selectedClaim(claims.id)">{{claims.claimNumber}}</td>
+          <td style="text-align: center;"><p-button icon="pi pi-calendar-plus" severity="secondary" size="small" aria-label="Chat"/></td>
+          <td style="text-align: center;"><p-button icon="pi pi-calendar-plus" severity="secondary" size="small" aria-label="Chat"/></td>
+          <td style="text-align: center;"><p-button icon="pi pi-calendar-plus" severity="secondary" size="small" aria-label="Chat"/></td>
+          <td>{{claims.clientName}}</td>
+          <td style="text-align: right;">{{claims.mountTr | formatoMonto:true}}</td>
+          <td style="text-align: right;"> <p-badge value="{{claims.agencyChannel}}" severity="secondary" /></td>
         </tr>
       </ng-template>
     </p-table>

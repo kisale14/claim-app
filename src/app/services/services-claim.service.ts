@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { Claim } from '../../model/claim';
+import { claimModel } from '../../model/claimModel';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +12,7 @@ export class ServicesClaim {
   header: HttpHeaders;
   private dataClaimUrl = `${environment.apiURL}claim.json`;
 
-  private claimsSubject = new BehaviorSubject<Claim[]>([]);
+  private claimsSubject = new BehaviorSubject<claimModel[]>([]);
 
   public claims$ = this.claimsSubject.asObservable();
 
@@ -19,7 +20,7 @@ export class ServicesClaim {
     this.header = new HttpHeaders();
   }
 
-  getClaims(): Observable<Claim[]> {
+  getClaims(): Observable<claimModel[]> {
     if (this.claimsSubject.value.length === 0) {
       this.loadClaims();
     }
@@ -46,7 +47,7 @@ export class ServicesClaim {
     return this.claims$.pipe(map((claims) => claims.filter((claim) => claim.status === 3).length));
   }
 
-  saveFormattedClaim(formattedClaim: Claim): { success: boolean; error?: string } {
+  saveFormattedClaim(formattedClaim: claimModel): { success: boolean; error?: string } {
     try {
       const currentClaims = this.claimsSubject.value;
       const updatedClaims = [...currentClaims, formattedClaim];
@@ -67,23 +68,34 @@ export class ServicesClaim {
   }
 
   formatClaimObject(claimData: any): {
-    claim: Claim;
+    claim: claimModel;
     result: { success: boolean; error?: string };
   } {
-    const claim = new Claim();
-
+    console.log(claimData);
+    const claim = new claimModel();
     // Asignaciones directas
-    claim.id = claimData.id || this.generateId();
-    claim.claimNumber = claimData.claimNumber || `CLM-${Date.now()}`;
-    claim.creationDate = claimData.creationDate || new Date();
+    claim.id = this.generateId();
+    claim.claimNumber = 'REC100' + claim.id;
+    claim.ente = claimData.ente;
+    claim.clientName = claimData.name;
+    claim.identification = claimData.identification;
+    claim.typeClient = claimData.typeClient.nombre;
+    claim.phone = claimData.phone;
+    claim.email = claimData.email;
+    claim.direction = claimData.direction;
+    claim.agencyChannel = claimData.agencyChannel.nombre;
+    claim.description = claimData.description;
+    claim.numbercount = claimData.numberCount;
+    claim.numberCard = claimData.numberCard;
+    claim.dateTransaction = new Date(claimData.dateTransaction);
+    claim.mountTr = claimData.mountTr;
+    claim.instrumentTr = claimData.instrumentTr.nombre;
+    claim.typeClaim = claimData.typeClaim.nombre;
+    claim.channelTr = claimData.channelTr.nombre;
+    claim.reasonTr = claimData.reasonTr.nombre;
+    claim.referenceTransaction = claimData.referenceTransaction;
     claim.status = 1;
     claim.statusName = 'Pendiente';
-    claim.name = claimData.name || '';
-    claim.identification = claimData.identification || '';
-    claim.phone = claimData.phone || '';
-    claim.dateOfIncident = claimData.dateOfIncident || claimData.date || new Date();
-    claim.mount = claimData.mount || '0';
-    claim.userCreation = claimData.userCreation || 1;
 
     // Guardar y devolver TODO: claim + resultado
     const result = this.saveFormattedClaim(claim);
@@ -95,7 +107,7 @@ export class ServicesClaim {
     claimNumber?: string;
     name?: string;
     identification?: string;
-  }): Observable<Claim[]> {
+  }): Observable<claimModel[]> {
     return this.claims$.pipe(
       map((claims) => {
         return claims.filter((claim) => {
@@ -110,7 +122,8 @@ export class ServicesClaim {
 
           // Filtrar por nombre (si se proporciona)
           if (filterData.name) {
-            matches = matches && claim.name.toLowerCase().includes(filterData.name.toLowerCase());
+            matches =
+              matches && claim.clientName.toLowerCase().includes(filterData.name.toLowerCase());
           }
 
           // Filtrar por identificación (si se proporciona)
@@ -124,7 +137,7 @@ export class ServicesClaim {
     );
   }
 
-  getClaimById(id: number): Observable<Claim | undefined> {
+  getClaimById(id: number): Observable<claimModel | undefined> {
     // Si los claims ya están cargados, buscamos directamente en el BehaviorSubject
     if (this.claimsSubject.value.length > 0) {
       const claim = this.claimsSubject.value.find((c) => c.id === id);
@@ -138,7 +151,7 @@ export class ServicesClaim {
   updateClaimStatus(
     id: number,
     statusId: number,
-  ): { success: boolean; error?: string; claim?: Claim } {
+  ): { success: boolean; error?: string; claim?: claimModel } {
     try {
       const currentClaims = this.claimsSubject.value;
 
@@ -210,7 +223,7 @@ export class ServicesClaim {
 
   private loadClaims(): void {
     this.http
-      .get<Claim[]>(this.dataClaimUrl)
+      .get<claimModel[]>(this.dataClaimUrl)
       .pipe(
         tap((claims) => {
           console.log(`✅ Datos cargados: ${claims.length} reclamos`);
@@ -218,7 +231,7 @@ export class ServicesClaim {
         catchError((error) => {
           console.error('❌ Error al cargar los reclamos:', error);
 
-          return of([] as Claim[]);
+          return of([] as claimModel[]);
         }),
       )
       .subscribe((claims) => {

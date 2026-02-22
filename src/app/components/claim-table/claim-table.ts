@@ -13,6 +13,9 @@ import { ButtonModule } from 'primeng/button';
 import { FormClaim } from '../form-claim/form-claim';
 import { TooltipModule } from 'primeng/tooltip';
 import { FileModal } from '../file-modal/file-modal';
+import { claimModel } from '../../../model/claimModel';
+import { BadgeModule } from 'primeng/badge';
+import { FormatoMontoPipe } from '../../pipes/formato-monto-pipe';
 
 @Component({
   selector: 'app-claim-table',
@@ -28,19 +31,23 @@ import { FileModal } from '../file-modal/file-modal';
     FormClaim,
     TooltipModule,
     FileModal,
-  ],
+    BadgeModule,
+    FormatoMontoPipe
+],
   templateUrl: './claim-table.html',
   styleUrl: './claim-table.css',
 })
 export class ClaimTable {
-  claim$: Observable<Claim[]>;
+  claim$: Observable<claimModel[]>;
   claimId: number = 0;
   VisibilityForm: boolean = false;
   VisibilityFile: boolean = false;
 
   @ViewChild('dt') dt!: Table;
 
-  constructor(private servicesClaim: ServicesClaim) {
+  constructor(
+    private servicesClaim: ServicesClaim,
+  ) {
     this.claim$ = this.servicesClaim.getClaims();
   }
 
