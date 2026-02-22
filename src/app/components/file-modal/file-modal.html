@@ -27,7 +27,8 @@
     <p-fileupload
       #fileUpload
       name="documentos[]"
-      [multiple]="true"
+      [multiple]="false"
+      chooseLabel="Seleccionar archivo"
       accept="image/*,.pdf"
       maxFileSize="5000000"
       (onSelect)="onFileSelect($event)"

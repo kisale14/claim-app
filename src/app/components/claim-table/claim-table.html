@@ -39,12 +39,12 @@
         </tr>
       </ng-template>
       <ng-template #body let-claims>
-        <tr class="cursor-pointer">
+        <tr class="cursor-pointer" (click)="showid(claims.id)">
           <td style="text-align: center;"><p-button (onClick)="exportPdfClaim(claims)" icon="pi pi-file-pdf" size="small" aria-label="pdf" pTooltip="Descargar pdf" tooltipPosition="top" severity="contrast"/></td>
           <td style="text-align: center;"><p-button (onClick)="showFile()" label="Ver Anexo" size="small" aria-label="anexo" pTooltip="Ver Anexo" tooltipPosition="top"/></td>
-          <td style="text-align: center;"><i (onClick)="showFile()" class="pi pi-exclamation-triangle" style="color: rgb(224, 224, 64)" pTooltip="Listado de Faltantes" tooltipPosition="top"></i></td>
+          <td style="text-align: center;"><i (onClick)="showFile()" class="pi pi-exclamation-triangle" style="color: rgb(224, 224, 64)" (click)="showDocumentation()" pTooltip="Listado de Faltantes" tooltipPosition="top"></i></td>
           <td style="text-align: center;"><p-button (onClick)="showChat()" icon="pi pi-comments" severity="info" size="small" aria-label="Chat" pTooltip="Ver Chat" tooltipPosition="top"/></td>
-          <td style="text-align: center;" *ngIf="claims.status === 1"><p-button label="{{claims.statusName}}" [rounded]="true" severity="warn" size="small"/></td>
+          <td style="text-align: center;" *ngIf="claims.status === 1"><p-splitbutton [model]="items" label="{{claims.statusName}}" [rounded]="true" severity="warn" size="small"/></td>
           <td style="text-align: center;" *ngIf="claims.status === 2"><p-button label="{{claims.statusName}}" [rounded]="true" severity="info" size="small"/></td>
           <td style="text-align: center;" *ngIf="claims.status === 3"><p-button label="{{claims.statusName}}" [rounded]="true" severity="danger" size="small"/></td>
           <td style="text-decoration: underline;" class="text-blue-600" (click)="selectedClaim(claims.id)">{{claims.claimNumber}}</td>
@@ -74,4 +74,8 @@
     [VisibilityFile]="VisibilityChat"
     (visibleChangeFile)="VisibilityChat = false"
   />
+
+  <app-documentation-modal
+    [VisibilityDocumentation]="VisibilityDocumentation"
+    (visibleChangeDocumentation)="VisibilityDocumentation = false"/>
 
