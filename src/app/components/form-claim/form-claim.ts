@@ -148,8 +148,8 @@ export class FormClaim {
     }
   }
 
-  generarPDF() {
-    this.pdfService.exportarFormatoPDFPrueba();
+  generarPDF(claimData: claimModel) {
+    this.pdfService.exportarFormatoPDFPrueba(claimData);
   }
 
   private handleIdClaimChange(newId: number) {
@@ -231,6 +231,7 @@ export class FormClaim {
           detail: 'El reclamo ha sido guardado exitosamente.',
         });
         console.log(res.claim);
+        this.generarPDF(res.claim);
         this.closeForm();
       }
     } else {

@@ -16,6 +16,8 @@ import { FileModal } from '../file-modal/file-modal';
 import { claimModel } from '../../../model/claimModel';
 import { BadgeModule } from 'primeng/badge';
 import { FormatoMontoPipe } from '../../pipes/formato-monto-pipe';
+import { PdfGeneratorService } from '../../services/pdf-generator-service.service';
+import { ChatModal } from '../chat-modal/chat-modal';
 
 @Component({
   selector: 'app-claim-table',
@@ -32,8 +34,9 @@ import { FormatoMontoPipe } from '../../pipes/formato-monto-pipe';
     TooltipModule,
     FileModal,
     BadgeModule,
-    FormatoMontoPipe
-],
+    FormatoMontoPipe,
+    ChatModal,
+  ],
   templateUrl: './claim-table.html',
   styleUrl: './claim-table.css',
 })
@@ -42,11 +45,13 @@ export class ClaimTable {
   claimId: number = 0;
   VisibilityForm: boolean = false;
   VisibilityFile: boolean = false;
+  VisibilityChat: boolean = false;
 
   @ViewChild('dt') dt!: Table;
 
   constructor(
     private servicesClaim: ServicesClaim,
+    private pdfGeneratorService: PdfGeneratorService,
   ) {
     this.claim$ = this.servicesClaim.getClaims();
   }
@@ -72,8 +77,16 @@ export class ClaimTable {
     this.VisibilityForm = false;
   }
 
+  showChat() {
+    this.VisibilityChat = true;
+  }
+
   selectedClaim(idClaim: number) {
     this.claimId = idClaim;
     this.showForm();
+  }
+
+  exportPdfClaim(claim: claimModel) {
+    this.pdfGeneratorService.exportarFormatoPDFPrueba(claim);
   }
 }
