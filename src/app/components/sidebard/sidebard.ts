@@ -28,8 +28,10 @@ import { LayoutService } from '../../services/layout.service';
 export class Sidebard {
   items: MegaMenuItem[] | undefined;
   checked: boolean = false;
+  isCollapsed = false;
+  private readonly STORAGE_KEY = 'sidebar_collapsed';
 
-  constructor(public layoutService : LayoutService) {}
+  constructor(public layoutService: LayoutService) {}
 
   ngOnInit() {
     this.items = [
@@ -40,9 +42,9 @@ export class Sidebard {
     ];
   }
 
-  isCollapsed = false;
-
   toggleSidebar() {
     this.layoutService.toggleMenu();
   }
+
+
 }

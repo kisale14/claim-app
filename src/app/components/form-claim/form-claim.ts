@@ -13,6 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputText } from "primeng/inputtext";
 import { PdfGeneratorService } from '../../services/pdf-generator-service.service';
 import { claimModel } from '../../../model/claimModel';
+import { FormatoMontoPipe } from '../../pipes/formato-monto-pipe';
 
 interface City {
   name: string;
@@ -107,7 +108,10 @@ export class FormClaim {
     ];
     this.tiposReclamos = [
       { nombre: 'Presunto Pago Indebido', codigo: 'Presunto Pago Indebido' },
-      { nombre: 'Monto Cargado y No dispensado en ATM', codigo: 'Monto Cargado y No dispensado en ATM' },
+      {
+        nombre: 'Monto Cargado y No dispensado en ATM',
+        codigo: 'Monto Cargado y No dispensado en ATM',
+      },
       { nombre: 'Debitos no Reconocidos', codigo: 'Debitos no Reconocidos' },
       { nombre: 'Consumos o Montos no reconocidos', codigo: 'Consumos o Montos no reconocidos' },
       { nombre: 'Presunto Robo o Hurto', codigo: 'Presunto Robo o Hurto' },
@@ -130,11 +134,26 @@ export class FormClaim {
       { nombre: 'Transaccion Fallida', codigo: 'Transaccion Fallida' },
       { nombre: 'Consumo Duplicado', codigo: 'Consumo Duplicado' },
       { nombre: 'Consumo no Reconocido', codigo: 'Consumo no Reconocido' },
-      { nombre: 'Transferencias a otros bancos no acreditada', codigo: 'Transferencias a otros bancos no acreditada' },
-      { nombre: 'Transferencias a otros bancos no reconocida', codigo: 'Transferencias a otros bancos no reconocida' },
-      { nombre: 'Transferencias a otros bancos no duplicadas', codigo: 'Transferencias a otros bancos no duplicadas' },
-      { nombre: 'Transferencias propias no Acreditada', codigo: 'Transferencias propias no Acreditada' },
-      { nombre: 'Transferencias propias no reconocida', codigo: 'Transferencias propias no reconocida' },
+      {
+        nombre: 'Transferencias a otros bancos no acreditada',
+        codigo: 'Transferencias a otros bancos no acreditada',
+      },
+      {
+        nombre: 'Transferencias a otros bancos no reconocida',
+        codigo: 'Transferencias a otros bancos no reconocida',
+      },
+      {
+        nombre: 'Transferencias a otros bancos no duplicadas',
+        codigo: 'Transferencias a otros bancos no duplicadas',
+      },
+      {
+        nombre: 'Transferencias propias no Acreditada',
+        codigo: 'Transferencias propias no Acreditada',
+      },
+      {
+        nombre: 'Transferencias propias no reconocida',
+        codigo: 'Transferencias propias no reconocida',
+      },
       { nombre: 'Transferencias propias duplicadas', codigo: 'Transferencias propias duplicadas' },
       { nombre: 'Pago Movil no exitoso', codigo: 'Pago Movil no exitoso' },
       { nombre: 'Pago Movil no acreditado', codigo: 'Pago Movil no acreditado' },
@@ -169,23 +188,83 @@ export class FormClaim {
     }
   }
 
-  onActionSelected(event: any): void {
-    const selectedValue = event.target.value;
-    const selectedText = event.target.options[event.target.selectedIndex].text;
+  formatMountForPatch(value: string | number, enCentimos: boolean = true): string {
+    if (!value && value !== 0) return '';
 
-    this.servicesClaim.updateClaimStatus(this.selectedClaim!.id, parseInt(selectedValue));
+    let numero: number;
 
-    this.closeForm();
+    if (typeof value === 'string') {
+      // Caso 1: String con formato europeo (ej: "1.200,50" o "1.200,00")
+      if (value.includes(',') || (value.includes('.') && !value.includes(','))) {
+        // Para formato europeo: eliminar puntos (miles) y cambiar coma por punto
+        const valorLimpio = value
+          .replace(/\./g, '') // Eliminar puntos (separadores de miles)
+          .replace(',', '.'); // Cambiar coma decimal por punto
+        numero = parseFloat(valorLimpio);
+
+        // Si enCentimos es true, asumimos que el valor está en céntimos
+        if (enCentimos) {
+          numero = numero / 100;
+        }
+      }
+      // Caso 2: String con formato americano (ej: "1,200.50")
+      else if (value.includes(',')) {
+        // Para formato americano: eliminar comas (miles)
+        const valorLimpio = value.replace(/,/g, '');
+        numero = parseFloat(valorLimpio);
+
+        // Si enCentimos es true, asumimos que el valor está en céntimos
+        if (enCentimos) {
+          numero = numero / 100;
+        }
+      }
+      // Caso 3: String numérico simple (ej: "120000")
+      else {
+        // Asegurarse de que sea un número válido
+        const valorLimpio = value.replace(/[^\d]/g, '');
+        numero = parseFloat(valorLimpio);
+
+        // Si enCentimos es true, dividir entre 100
+        if (enCentimos) {
+          numero = numero / 100;
+        }
+      }
+    } else {
+      // Si es número
+      numero = value;
+
+      // Si enCentimos es true, dividir entre 100
+      if (enCentimos) {
+        numero = value / 100;
+      }
+    }
+
+    // Validar que sea un número válido
+    if (isNaN(numero)) return '';
+
+    // Formatear con punto como separador de miles y coma como decimal
+    return numero.toLocaleString('es-ES', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true,
+    });
   }
 
   loadDataForm(claimData: claimModel) {
     this.claimForm.patchValue({
       id: claimData.id,
+      ente: claimData.ente,
       name: claimData.clientName,
+      email: claimData.email,
+      direction: claimData.direction,
       identification: claimData.identification,
+      description: claimData.description,
+      numberCount: claimData.numbercount,
+      numberCard: claimData.numberCard,
       phone: claimData.phone,
       date: claimData.dateTransaction,
-      mount: claimData.mountTr,
+      mountTr: this.formatMountForPatch(claimData.mountTr, true),
+      referenceTr: claimData.referenceTransaction,
     });
   }
 

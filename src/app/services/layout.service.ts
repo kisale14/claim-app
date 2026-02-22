@@ -4,24 +4,51 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class LayoutService {
-  // Usamos un signal para el estado del menú (colapsado o no)
-  private _menuCollapsed = signal(false);
-
-  // Exponemos una señal de solo lectura para los componentes
+  private readonly STORAGE_KEY = 'sidebar_collapsed';
+  private _menuCollapsed = signal<boolean>(this.loadInitialState());
   public menuCollapsed = this._menuCollapsed.asReadonly();
 
-  /**
-   * Método para alternar el estado del menú.
-   * Es el equivalente a onMenuToggle() en la documentación de Sakai.
-   */
-  toggleMenu() {
-    this._menuCollapsed.update((state) => !state);
+  private loadInitialState(): boolean {
+    try {
+      const savedState = localStorage.getItem(this.STORAGE_KEY);
+      return savedState !== null ? JSON.parse(savedState) : false;
+    } catch (error) {
+      console.error('Error loading sidebar state:', error);
+      return false;
+    }
   }
 
-  /**
-   * Método para establecer un estado específico (útil para ciertas rutas o responsive).
-   */
-  setMenuCollapsed(state: boolean) {
+  private saveState(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._menuCollapsed()));
+    } catch (error) {
+      console.error('Error saving sidebar state:', error);
+    }
+  }
+
+  toggleMenu(): void {
+    this._menuCollapsed.update((state) => !state);
+    this.saveState(); // Guardado explícito
+  }
+
+  setMenuCollapsed(state: boolean): void {
     this._menuCollapsed.set(state);
+    this.saveState(); // Guardado explícito
+  }
+
+  resetMenuCollapsed(): void {
+    this.setMenuCollapsed(false);
+  }
+
+  clearSavedState(): void {
+    localStorage.removeItem(this.STORAGE_KEY);
+    this.setMenuCollapsed(false);
+  }
+
+  reloadFromStorage(): void {
+    const savedState = this.loadInitialState();
+    if (savedState !== this._menuCollapsed()) {
+      this._menuCollapsed.set(savedState);
+    }
   }
 }
