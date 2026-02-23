@@ -7,10 +7,20 @@ import { FormClaim } from '../form-claim/form-claim';
 import { SearchClaim } from '../search-claim/search-claim';
 import { ServicesClaim } from '../../services/services-claim.service';
 import { combineLatest, Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { FilterServiceTable } from '../../services/filter-service.service';
 
 @Component({
   selector: 'app-cards',
-  imports: [CardModule, ChartModule, ButtonModule, FormClaim, SearchClaim, CommonModule],
+  imports: [
+    CardModule,
+    ChartModule,
+    ButtonModule,
+    FormClaim,
+    SearchClaim,
+    CommonModule,
+    FormsModule,
+  ],
   templateUrl: './cards.html',
   styleUrl: './cards.css',
 })
@@ -22,6 +32,9 @@ export class Cards {
   optionsBar: any;
   options: any;
 
+  reclamoValue: string = '';
+  documentoValue: string = '';
+
   // Inyecciones necesarias
   private platformId = inject(PLATFORM_ID);
   private cd = inject(ChangeDetectorRef);
@@ -31,7 +44,10 @@ export class Cards {
   approvedCount$!: Observable<number>;
   rejectedCount$!: Observable<number>;
 
-  constructor(private claimService: ServicesClaim) {}
+  constructor(
+    private claimService: ServicesClaim,
+    private filterService: FilterServiceTable,
+  ) {}
 
   ngOnInit() {
     this.initChartBar();
@@ -62,6 +78,14 @@ export class Cards {
 
   hideSearch() {
     this.VisibilitySearch = false;
+  }
+
+  onReclamoChange(value: string) {
+    this.filterService.setReclamo(value)
+  }
+
+  onDocumentoChange(value: string) {
+    this.filterService.setDocumento(value);
   }
 
   initChart(approved: number, rejected: number, pending: number) {

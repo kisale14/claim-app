@@ -22,5 +22,29 @@
     "referenceTransaction": "REF-2025-02-15-001",
     "status": 1,
     "statusName": "Pendiente"
+  },
+  {
+    "id": 2,
+    "claimNumber": "REC-1002",
+    "ente": "3489",
+    "clientName": "IMPORTADORA C.A",
+    "identification": "500905678",
+    "typeClient": "Jurídico (J)",
+    "phone": "0412-3456789",
+    "email": "importadora@email.com",
+    "direction": "Av. Principal, Edificio Centro, Caracas 1010",
+    "agencyChannel": "Sede Central",
+    "description": "RECLAMO POR TRANSACCIÓN NO RECONOCIDA",
+    "numbercount": "016912234382174825678",
+    "numberCard": "128784781111",
+    "dateTransaction": "2025-02-15T14:35:00",
+    "mountTr": "350000",
+    "instrumentTr": "Tarjeta Debito",
+    "typeClaim": "Presunto Pago Indebido",
+    "channelTr": "POS",
+    "reasonTr": "Consumo Duplicado",
+    "referenceTransaction": "REF-2025-02-15-001",
+    "status": 1,
+    "statusName": "Pendiente"
   }
 ]

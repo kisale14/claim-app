@@ -1,11 +1,12 @@
   <div class="card shadow-lg m-4 border-round mb-8">
     <p-table
+    #dt
       [value]="(claim$ | async) || []"
       [tableStyle]="{ 'min-width': '50rem' }"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[10, 20, 30]"
-      [globalFilterFields]="['name']"
+      [globalFilterFields]="['claimNumber', 'identification']"
       stripedRows
       scrollHeight="430px"
       [scrollable]="true"

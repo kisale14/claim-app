@@ -7,7 +7,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ServicesClaim } from '../../services/services-claim.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { FormClaim } from '../form-claim/form-claim';
 import { TooltipModule } from 'primeng/tooltip';
@@ -19,6 +19,7 @@ import { PdfGeneratorService } from '../../services/pdf-generator-service.servic
 import { ChatModal } from '../chat-modal/chat-modal';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { DocumentationModal } from '../documentation-modal/documentation-modal';
+import { FilterServiceTable } from '../../services/filter-service.service';
 
 @Component({
   selector: 'app-claim-table',
@@ -52,6 +53,8 @@ export class ClaimTable {
   VisibilityDocumentation: boolean = false;
   idClaim: number = 0;
 
+  private subscription!: Subscription;
+
   items: any[] = [];
 
   @ViewChild('dt') dt!: Table;
@@ -59,6 +62,7 @@ export class ClaimTable {
   constructor(
     private servicesClaim: ServicesClaim,
     private pdfGeneratorService: PdfGeneratorService,
+    private filterService: FilterServiceTable,
   ) {
     this.claim$ = this.servicesClaim.getClaims();
   }
@@ -69,6 +73,18 @@ export class ClaimTable {
       { label: 'Aprobar', icon: 'pi pi-check', command: () => this.updateClaimStatus(2) },
       { label: 'Rechazar', icon: 'pi pi-times', command: () => this.updateClaimStatus(3) },
     ];
+
+    this.subscription = this.filterService.reclamo$.subscribe((value) => {
+      if (this.dt) {
+        this.dt.filterGlobal(value, 'contains');
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   showid(id: number) {

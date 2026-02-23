@@ -87,110 +87,108 @@
     </p-card>
     <!-- Cards con totales de reclamos -->
   </div>
-<div class="mb-2 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="mb-2 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-  <!-- Card de gráfico - ocupa 2 columnas -->
- <p-card
-    [style]="{'padding': '0', 'height': '180px'}"
-    class="lg:col-span-2 shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
-    <div class="p-4">
-      <h3 class="text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
-        <i class="pi pi-search text-orange-500 text-sm"></i>
-        Búsqueda de reclamos
-      </h3>
+    <!-- Card de gráfico - ocupa 2 columnas -->
+    <p-card
+      [style]="{'padding': '0', 'height': '180px'}"
+      class="lg:col-span-2 shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden">
+      <div class="p-4">
+        <h3 class="text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
+          <i class="pi pi-search text-orange-500 text-sm"></i>
+          Búsqueda de reclamos
+        </h3>
 
-      <form class="space-y-3">
-        <!-- Fila 1: Número reclamo y documento -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input type="text" placeholder="N° Reclamo" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
-          <input type="text" placeholder="N° Documento" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
-        </div>
+          <!-- Fila 1: Número reclamo y documento -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
+            <input type="text" [(ngModel)]="reclamoValue" (input)="onReclamoChange(reclamoValue)" placeholder="N° Reclamo" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+            <input type="text" [(ngModel)]="documentoValue" (input)="onDocumentoChange(documentoValue)" placeholder="N° Documento" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+          </div>
 
-        <!-- Fila 2: Tipo y estado -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <select class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg bg-white">
-            <option>Tipo documento</option>
-            <option>DNI</option>
-            <option>RUC</option>
-          </select>
-          <select class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg bg-white">
-            <option>Estado</option>
-            <option>Pendiente</option>
-            <option>Resuelto</option>
-          </select>
-        </div>
-      </form>
-    </div>
-  </p-card>
-
-  <!-- Card Crear Reclamos - ocupa 1 columna -->
-  <p-card
-    [style]="{'padding': '0', 'height': '180px'}"
-    class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
-    <!-- Contenedor principal con altura completa y centrado -->
-    <div class="h-full w-full flex items-center justify-center">
-      <!-- Contenedor del gráfico con tamaño proporcional al card -->
-      <div class="relative w-[140px] h-[140px] flex items-center justify-center">
-        <p-chart
-          height="180px"
-          type="doughnut"
-          [data]="data"
-          [options]="options"
-          style="width: 100%; height: 100%; display: block;"
-        />
-        <!-- Texto centrado sobre el gráfico -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span class="text-2xl text-slate-800 font-bold tracking-tight">
-            {{ totalClaims$ | async }}
-          </span>
-        </div>
-
+          <!-- Fila 2: Tipo y estado -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <select class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg bg-white">
+              <option>Tipo documento</option>
+              <option>DNI</option>
+              <option>RUC</option>
+            </select>
+            <select class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg bg-white">
+              <option>Estado</option>
+              <option>Pendiente</option>
+              <option>Resuelto</option>
+            </select>
+          </div>
       </div>
-    </div>
+    </p-card>
 
-  </p-card>
+    <!-- Card Crear Reclamos - ocupa 1 columna -->
+    <p-card
+      [style]="{'padding': '0', 'height': '180px'}"
+      class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-gradient-to-br from-white to-orange-50">
+      <!-- Contenedor principal con altura completa y centrado -->
+      <div class="h-full w-full flex items-center justify-center">
+        <!-- Contenedor del gráfico con tamaño proporcional al card -->
+        <div class="relative w-[140px] h-[140px] flex items-center justify-center">
+          <p-chart
+            height="180px"
+            type="doughnut"
+            [data]="data"
+            [options]="options"
+            style="width: 100%; height: 100%; display: block;"
+          />
+          <!-- Texto centrado sobre el gráfico -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span class="text-2xl text-slate-800 font-bold tracking-tight">
+              {{ totalClaims$ | async }}
+            </span>
+          </div>
 
-  <!-- Card Buscar Reclamos - ocupa 1 columna -->
-<p-card
-  (click)="showForm()"
-  [style]="{'padding': '0', 'height': '180px'}"
-  class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-white relative group"
->
-  <!-- Línea superior sutil que aparece en hover -->
-  <div class="absolute top-0 left-1/2 w-0 h-0.5 bg-orange-400 group-hover:w-12 group-hover:left-1/2 group-hover:-translate-x-1/2 transition-all duration-300 ease-in-out"></div>
-
-  <div class="h-full w-full flex flex-col items-center justify-center px-4">
-
-    <!-- Icono minimalista con anillo -->
-    <div class="relative mb-3">
-      <!-- Círculo exterior que aparece en hover -->
-      <div class="absolute inset-0 rounded-full border border-orange-200 scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-      <!-- Icono principal -->
-      <div class="w-14 h-14 rounded-full flex items-center justify-center text-orange-400 group-hover:text-orange-500 transition-colors">
-        <i class="pi pi-file-edit text-3xl"></i>
+        </div>
       </div>
+
+    </p-card>
+
+    <!-- Card Buscar Reclamos - ocupa 1 columna -->
+    <p-card
+    (click)="showForm()"
+    [style]="{'padding': '0', 'height': '180px'}"
+    class="shadow-lg border-round transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:shadow-xl overflow-hidden bg-white relative group"
+  >
+    <!-- Línea superior sutil que aparece en hover -->
+    <div class="absolute top-0 left-1/2 w-0 h-0.5 bg-orange-400 group-hover:w-12 group-hover:left-1/2 group-hover:-translate-x-1/2 transition-all duration-300 ease-in-out"></div>
+
+    <div class="h-full w-full flex flex-col items-center justify-center px-4">
+
+      <!-- Icono minimalista con anillo -->
+      <div class="relative mb-3">
+        <!-- Círculo exterior que aparece en hover -->
+        <div class="absolute inset-0 rounded-full border border-orange-200 scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        <!-- Icono principal -->
+        <div class="w-14 h-14 rounded-full flex items-center justify-center text-orange-400 group-hover:text-orange-500 transition-colors">
+          <i class="pi pi-file-edit text-3xl"></i>
+        </div>
+      </div>
+
+      <!-- Título -->
+      <h2 class="text-sm font-medium text-slate-700 m-0 text-center tracking-wide">
+        Crear Reclamo
+      </h2>
+
+      <!-- Descripción sutil -->
+      <p class="text-[10px] text-slate-400 m-0 text-center mt-1 max-w-[120px] leading-relaxed">
+        Registra un nuevo caso
+      </p>
+
+      <!-- Indicador de acción minimalista -->
+      <div class="flex items-center gap-1 mt-2 text-[9px] text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <span>nuevo</span>
+        <i class="pi pi-arrow-right text-[8px]"></i>
+      </div>
+
     </div>
-
-    <!-- Título -->
-    <h2 class="text-sm font-medium text-slate-700 m-0 text-center tracking-wide">
-      Crear Reclamo
-    </h2>
-
-    <!-- Descripción sutil -->
-    <p class="text-[10px] text-slate-400 m-0 text-center mt-1 max-w-[120px] leading-relaxed">
-      Registra un nuevo caso
-    </p>
-
-    <!-- Indicador de acción minimalista -->
-    <div class="flex items-center gap-1 mt-2 text-[9px] text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <span>nuevo</span>
-      <i class="pi pi-arrow-right text-[8px]"></i>
-    </div>
-
+    </p-card>
   </div>
-</p-card>
-</div>
 
 
   <app-form-claim
