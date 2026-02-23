@@ -81,7 +81,15 @@ export class Cards {
   }
 
   onReclamoChange(value: string) {
-    this.filterService.setReclamo(value)
+    this.filterService.setReclamo(value);
+  }
+
+  onReclamoStatus(value: string) {
+    this.filterService.setStatus(value);
+  }
+
+  clearStatus() {
+    this.filterService.clearStatus();
   }
 
   onDocumentoChange(value: string) {

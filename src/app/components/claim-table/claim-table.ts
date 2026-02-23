@@ -79,6 +79,13 @@ export class ClaimTable {
         this.dt.filterGlobal(value, 'contains');
       }
     });
+
+    this.subscription = this.filterService.status$.subscribe((value) => {
+      console.log('Filtrando status:', value);
+      if (this.dt) {
+        this.dt.filter(value, 'status', 'contains');
+      }
+    });
   }
 
   ngOnDestroy() {
