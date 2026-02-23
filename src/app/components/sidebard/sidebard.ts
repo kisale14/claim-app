@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { CardModule } from 'primeng/card';
 import { LayoutService } from '../../services/layout.service';
+import { ExportarExcel } from '../../services/exportar-excel.service';
 
 @Component({
   selector: 'app-sidebard',
@@ -34,7 +35,39 @@ export class Sidebard {
   dropdownTimeout: any;
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
 
-  constructor(public layoutService: LayoutService) {}
+  datosReclamos = [
+    {
+      reclamo: 'REC-001',
+      cliente: 'Juan Pérez',
+      documento: '12345678',
+      status: 'Activo',
+      fecha: new Date(),
+    },
+    {
+      reclamo: 'REC-002',
+      cliente: 'María Gómez',
+      documento: '87654321',
+      status: 'Pendiente',
+      fecha: new Date(),
+    },
+    {
+      reclamo: 'REC-003',
+      cliente: 'Carlos López',
+      documento: '11223344',
+      status: 'Completado',
+      fecha: new Date(),
+    },
+  ];
+
+  filtrosActuales = {
+    reclamo: 'REC',
+    status: 'Activo',
+  };
+
+  constructor(
+    public layoutService: LayoutService,
+    private exportarService: ExportarExcel,
+  ) {}
 
   ngOnInit() {
     this.items = [
@@ -43,6 +76,22 @@ export class Sidebard {
         root: true,
       },
     ];
+  }
+
+  async exportarReclamos() {
+    try {
+      // Opción 1: Exportar reclamos con formato especial
+      await this.exportarService.exportarTablaReclamos(this.datosReclamos, this.filtrosActuales);
+
+      // Opción 2: Exportar datos genéricos
+      // await this.exportarService.exportarDatos(
+      //   this.datosReclamos,
+      //   'reclamos',
+      //   'Reporte de Reclamos'
+      // );
+    } catch (error) {
+      console.error('Error al exportar:', error);
+    }
   }
 
   // Métodos

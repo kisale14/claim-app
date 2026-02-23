@@ -80,7 +80,9 @@
 
             @if (activeDropdown === 'reporteria') {
               <div class="absolute left-0 right-0 top-full mt-1 py-2 bg-gray-900 rounded-lg shadow-xl border border-gray-700 z-50">
-                <a class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer">
+                <a
+                  (click)="exportarReclamos()"
+                  class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer">
                   <i class="pi pi-file-excel text-sm"></i>
                   <span>Exportar Reporte en Excel</span>
                 </a>
