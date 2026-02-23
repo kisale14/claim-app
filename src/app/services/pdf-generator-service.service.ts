@@ -169,42 +169,60 @@ export class PdfGeneratorService {
         content: [
           // DATOS DEL CLIENTE O USUARIO
           {
-            text: 'DATOS DEL CLIENTE O USUARIO',
+            text: 'DATOS CLIENTE',
             style: 'subheader',
             color: '#000000',
-            fontSize: 14,
+            fontSize: 13,
             bold: true,
-            margin: [0, 10, 0, 10],
+            margin: [0, 40, 0, 10],
+          },
+          {
+            // Línea horizontal debajo del título - VERSIÓN CORREGIDA
+            canvas: [
+              {
+                type: 'line',
+                x1: 0, // Relativo al contenedor, empezamos desde el borde izquierdo
+                y1: 0,
+                x2: 515, // Ancho total menos márgenes (asumiendo que el stack tiene margin 40)
+                y2: 0,
+                lineWidth: 1,
+                lineColor: '#000000',
+              },
+            ],
+            margin: [0, 0, 0, 15], // [left, top, right, bottom] - Aplicamos márgenes aquí
           },
           {
             layout: {
               hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === node.table.body.length ? 1 : 1;
+                return 1; // Líneas horizontales de 1px en todas las filas
               },
               vLineWidth: function () {
-                return 0;
+                return 1; // Líneas verticales de 1px en todas las columnas
               },
               hLineColor: function () {
-                return '#dddddd';
+                return '#000000'; // Color negro para líneas horizontales
+              },
+              vLineColor: function () {
+                return '#000000'; // Color negro para líneas verticales
               },
               paddingLeft: function () {
-                return 8;
+                return 4;
               },
               paddingRight: function () {
-                return 8;
+                return 4;
               },
               paddingTop: function () {
-                return 8;
+                return 3;
               },
               paddingBottom: function () {
-                return 8;
+                return 3;
               },
             },
             table: {
               widths: ['20%', '30%', '20%', '30%'],
               body: [
                 [
-                  { text: 'Número Ente', style: 'tableHeader' },
+                  { text: 'Número Cliente', style: 'tableHeader' },
                   v.ente,
                   { text: 'Nro Reclamo', style: 'tableHeader' },
                   v.rec,
@@ -228,48 +246,60 @@ export class PdfGeneratorService {
 
           // INFORMACIÓN DEL RECLAMO
           {
-            text: 'INFORMACIÓN DEL RECLAMO',
+            text: 'Datos Persona Autorizada',
             style: 'subheader',
             margin: [0, 10, 0, 10],
           },
           {
+            // Línea horizontal debajo del título - VERSIÓN CORREGIDA
+            canvas: [
+              {
+                type: 'line',
+                x1: 0, // Relativo al contenedor, empezamos desde el borde izquierdo
+                y1: 0,
+                x2: 515, // Ancho total menos márgenes (asumiendo que el stack tiene margin 40)
+                y2: 0,
+                lineWidth: 1,
+                lineColor: '#000000',
+              },
+            ],
+            margin: [0, 0, 0, 15], // [left, top, right, bottom] - Aplicamos márgenes aquí
+          },
+          {
             layout: {
               hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === node.table.body.length ? 1 : 1;
+                return 1; // Líneas horizontales de 1px en todas las filas
               },
               vLineWidth: function () {
-                return 0;
+                return 1; // Líneas verticales de 1px en todas las columnas
               },
               hLineColor: function () {
-                return '#dddddd';
+                return '#000000'; // Color negro para líneas horizontales
+              },
+              vLineColor: function () {
+                return '#000000'; // Color negro para líneas verticales
               },
               paddingLeft: function () {
-                return 8;
+                return 4;
               },
               paddingRight: function () {
-                return 8;
+                return 4;
               },
               paddingTop: function () {
-                return 8;
+                return 3;
               },
               paddingBottom: function () {
-                return 8;
+                return 3;
               },
             },
             table: {
               widths: ['20%', '30%', '20%', '30%'],
               body: [
                 [
-                  { text: 'Agencia', style: 'tableHeader' },
-                  v.age,
-                  { text: 'Descripción', style: 'tableHeader' },
-                  v.desc,
-                ],
-                [
-                  { text: 'Autorizado', style: 'tableHeader' },
-                  v.aut,
-                  { text: 'Cédula Autorizado', style: 'tableHeader' },
-                  v.aut_c,
+                  { text: 'Nombres y Apellidos', style: 'tableHeader' },
+                  '',
+                  { text: 'Cédula de Identidad', style: 'tableHeader' },
+                  '',
                 ],
               ],
             },
@@ -283,32 +313,56 @@ export class PdfGeneratorService {
             margin: [0, 10, 0, 10],
           },
           {
+            // Línea horizontal debajo del título - VERSIÓN CORREGIDA
+            canvas: [
+              {
+                type: 'line',
+                x1: 0, // Relativo al contenedor, empezamos desde el borde izquierdo
+                y1: 0,
+                x2: 515, // Ancho total menos márgenes (asumiendo que el stack tiene margin 40)
+                y2: 0,
+                lineWidth: 1,
+                lineColor: '#000000',
+              },
+            ],
+            margin: [0, 0, 0, 15], // [left, top, right, bottom] - Aplicamos márgenes aquí
+          },
+          {
             layout: {
               hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === node.table.body.length ? 1 : 1;
+                return 1; // Líneas horizontales de 1px en todas las filas
               },
               vLineWidth: function () {
-                return 0;
+                return 1; // Líneas verticales de 1px en todas las columnas
               },
               hLineColor: function () {
-                return '#dddddd';
+                return '#000000'; // Color negro para líneas horizontales
+              },
+              vLineColor: function () {
+                return '#000000'; // Color negro para líneas verticales
               },
               paddingLeft: function () {
-                return 8;
+                return 4;
               },
               paddingRight: function () {
-                return 8;
+                return 4;
               },
               paddingTop: function () {
-                return 8;
+                return 3;
               },
               paddingBottom: function () {
-                return 8;
+                return 3;
               },
             },
             table: {
               widths: ['20%', '30%', '20%', '30%'],
               body: [
+                [
+                  { text: 'Agencia', style: 'tableHeader' },
+                  v.age,
+                  { text: 'Descripción Transacción', style: 'tableHeader' },
+                  v.tipo,
+                ],
                 [
                   { text: 'Cuenta', style: 'tableHeader' },
                   v.cta,
@@ -332,13 +386,6 @@ export class PdfGeneratorService {
                   v.can,
                   { text: 'Motivo', style: 'tableHeader' },
                   v.mot,
-                ],
-                // Fila de referencia con colspan
-                [
-                  { text: 'Referencia', style: 'tableHeader' },
-                  { text: v.ref, colSpan: 3, alignment: 'left' },
-                  '',
-                  '', // Celdas vacías necesarias para completar la estructura
                 ],
               ],
             },
@@ -379,14 +426,14 @@ export class PdfGeneratorService {
             margin: [0, 20, 0, 10],
           },
           subheader: {
-            fontSize: 14,
+            fontSize: 13,
             bold: true,
-            color: '#003366',
+            color: '#000000',
             margin: [0, 15, 0, 10],
           },
           tableHeader: {
             bold: true,
-            fontSize: 11,
+            fontSize: 9,
             color: '#000000',
             fillColor: '#f0f0f0',
           },
