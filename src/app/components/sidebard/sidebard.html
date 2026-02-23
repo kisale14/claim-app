@@ -64,6 +64,39 @@
             }
           </a>
 
+          <div class="relative" #dropdownContainer>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-gray-800 cursor-pointer whitespace-nowrap"
+              [class.justify-center]="layoutService.menuCollapsed()"
+              [class.bg-gray-800]="activeDropdown === 'reporteria'"
+              [title]="layoutService.menuCollapsed() ? 'Reportería' : ''"
+              (click)="toggleDropdown($event, 'reporteria')">
+              <i class="pi pi-file-export text-lg flex-shrink-0"></i>
+              @if (!layoutService.menuCollapsed()) {
+                <span class="flex-1 text-sm">Reportería</span>
+                <i class="pi pi-chevron-down text-xs transition-transform"
+                  [class.rotate-180]="activeDropdown === 'reporteria'"></i>
+              }
+            </a>
+
+            @if (activeDropdown === 'reporteria') {
+              <div class="absolute left-0 right-0 top-full mt-1 py-2 bg-gray-900 rounded-lg shadow-xl border border-gray-700 z-50">
+                <a class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer">
+                  <i class="pi pi-file-excel text-sm"></i>
+                  <span>Exportar Reporte en Excel</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer">
+                  <i class="pi pi-file-pdf text-sm"></i>
+                  <span>Exportar Reporte en PDF</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer">
+                  <i class="pi pi-file text-sm"></i>
+                  <span>Exportar Reporte en Atomo 13</span>
+                </a>
+              </div>
+            }
+          </div>
+
+
           <!-- Analíticas -->
           <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-all cursor-pointer whitespace-nowrap"
              [class.justify-center]="layoutService.menuCollapsed()"

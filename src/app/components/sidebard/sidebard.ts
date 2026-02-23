@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -30,6 +30,9 @@ export class Sidebard {
   checked: boolean = false;
   isCollapsed = false;
   private readonly STORAGE_KEY = 'sidebar_collapsed';
+  activeDropdown: string | null = null;
+  dropdownTimeout: any;
+  @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
 
   constructor(public layoutService: LayoutService) {}
 
@@ -42,9 +45,36 @@ export class Sidebard {
     ];
   }
 
+  // Métodos
+  toggleDropdown(event: MouseEvent, dropdown: string): void {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.dropdownContainer && !this.dropdownContainer.nativeElement.contains(event.target)) {
+      this.activeDropdown = null;
+    }
+  }
+
+  openDropdown(dropdown: string): void {
+    if (this.dropdownTimeout) {
+      clearTimeout(this.dropdownTimeout);
+      this.dropdownTimeout = null;
+    }
+    this.activeDropdown = dropdown;
+  }
+
+  closeDropdown(dropdown: string): void {
+    this.dropdownTimeout = setTimeout(() => {
+      if (this.activeDropdown === dropdown) {
+        this.activeDropdown = null;
+      }
+    }, 200);
+  }
+
   toggleSidebar() {
     this.layoutService.toggleMenu();
   }
-
-
 }
